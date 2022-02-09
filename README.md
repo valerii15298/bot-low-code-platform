@@ -5,21 +5,16 @@
 ```bash
 git clone https://github.com/valerii15298/bot-low-code-platform.git
 cd bot-low-code-platform
-echo "DATABASE_URL=\"postgresql://<POSTGRES_USER>:<POSTGRES_PASSWORD>@localhost:5432\"" > packages/api/.env
+echo 'DATABASE_URL="postgresql://<POSTGRES_USER>:<POSTGRES_PASSWORD>@localhost:5432"' > packages/api/.env
 npm install -g pnpm
 pnpm install
-pnpm -C packages/api exec prisma migrate --name init
+pnpm -C packages/api exec prisma migrate dev --name init
 ```
 
 ## Running the app
 ###Linux:
 ```bash
 pnpm -r dev & pnpm -C packages/web run codegen
-```
-###Any other OS:
-```bash
-pnpm add -g concurrently
-concurrently "pnpm -r dev" "pnpm -C packages/web run codegen"
 ```
 ###Any other OS:
 ```bash
