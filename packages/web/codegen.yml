@@ -1,0 +1,27 @@
+overwrite: true
+schema: [ "src/graphql/schema.graphql", "src/graphql/local-schema.ts" ]
+documents: "src/graphql/operations.graphql"
+generates:
+  src/generated/graphql-request.ts:
+    plugins:
+      - typescript
+      - typescript-operations
+      - typescript-graphql-request
+  src/generated/apollo-helpers.ts:
+    plugins:
+      - "typescript-apollo-client-helpers"
+  src/generated/apollo.tsx:
+    plugins:
+      - "typescript"
+      - "typescript-operations"
+      - "typescript-react-apollo"
+    config:
+      "dedupeOperationSuffix": true
+  ./graphql.schema.json:
+    plugins:
+      - "introspection"
+  src/graphql/fragmentTypes.ts:
+    plugins:
+      - fragment-matcher
+    config:
+      useExplicitTyping: true

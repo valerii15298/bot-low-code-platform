@@ -1,0 +1,226 @@
+// datasource db {
+//   provider = "sqlite"
+//   url      = "file:./dev.db"
+// }
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+generator typegraphql {
+  provider = "typegraphql-prisma"
+  output   = "../prisma/generated/type-graphql"
+}
+
+model BotFlowVersion {
+  id          Int          @id @default(autoincrement())
+  version     Int          @default(0)
+  botFlowId   Int
+  botFlow     BotFlow      @relation(fields: [botFlowId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  connections Connection[]
+  nodes       FlowNode[]
+}
+
+// model Pos {
+//   id         Int       @id @default(autoincrement())
+//   x          Float
+//   y          Float
+//   portId     Int?      @unique
+//   flowNodeId Int?      @unique
+//   FlowNode   FlowNode? @relation(fields: [flowNodeId], references: [id])
+//   Port       Port?     @relation(fields: [portId], references: [id])
+// }
+
+// port index
+// 1 - in
+// 2 - out
+// 3 - sub
+
+model Port {
+  id             Int          @id @default(autoincrement())
+  index          Int
+  flowNodeId     Int
+  node           FlowNode     @relation(fields: [flowNodeId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  outConnections Connection[] @relation("from")
+  inConnection   Connection?  @relation("to")
+  // Pos            Pos?
+}
+
+model Connection {
+  id               Int            @id @default(autoincrement())
+  createdAt        DateTime       @default(now())
+  from             Int
+  to               Int            @unique
+  botFlowVersionId Int
+  flow             BotFlowVersion @relation(fields: [botFlowVersionId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  fromPort         Port           @relation("from", fields: [from], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  toPort           Port           @relation("to", fields: [to], references: [id], onDelete: Cascade, onUpdate: Cascade)
+}
+
+model BotFlow {
+  id          Int              @id @default(autoincrement())
+  name        String           @default("New bot flow")
+  description String           @default("New bot flow description")
+  versions    BotFlowVersion[]
+}
+
+model NodeInfo {
+  id           Int           @id @default(autoincrement())
+  name         String
+  description  String
+  iconLink     String
+  FlowNode     FlowNode?
+  TemplateNode TemplateNode?
+}
+
+model TemplateNode {
+  id                   Int                @id @default(autoincrement())
+  order                Int                @unique
+  templateNodesGroupId Int
+  group                TemplateNodesGroup @relation(fields: [templateNodesGroupId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  FlowNode             FlowNode[]
+
+  info       NodeInfo @relation(fields: [nodeInfoId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  nodeInfoId Int      @unique
+
+  NodeProps   NodeProps @relation(fields: [nodePropsId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  nodePropsId Int       @unique
+}
+
+model FlowNode {
+  id               Int            @id @default(autoincrement())
+  updatedAt        DateTime       @updatedAt
+  templateNodeId   Int?
+  botFlowVersionId Int
+  flow             BotFlowVersion @relation(fields: [botFlowVersionId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  templateNode     TemplateNode?  @relation(fields: [templateNodeId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  info       NodeInfo @relation(fields: [nodeInfoId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  nodeInfoId Int      @unique
+
+  NodeProps   NodeProps @relation(fields: [nodePropsId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  nodePropsId Int       @unique
+  ports       Port[]
+  // Pos              Pos?
+}
+
+model TemplateNodesGroup {
+  id          Int            @id @default(autoincrement())
+  name        String
+  description String
+  nodes       TemplateNode[]
+}
+
+model NodeProps {
+  id           Int           @id @default(autoincrement())
+  createdAt    DateTime      @default(now())
+  type         NodeType      @default(Text)
+  flowNode     FlowNode?
+  templateNode TemplateNode?
+
+  NodeAudioProps        NodeAudioProps?
+  NodeCountdownProps    NodeCountdownProps?
+  NodeFileProps         NodeFileProps?
+  NodeImageProps        NodeImageProps?
+  NodeLinkProps         NodeLinkProps?
+  NodeSwitchOptionProps NodeSwitchOptionProps?
+  NodeSwitchProps       NodeSwitchProps?
+  NodeTextProps         NodeTextProps?
+  NodeVideoProps        NodeVideoProps?
+  NodeWaitProps         NodeWaitProps?
+}
+
+//Types of nodes
+
+model NodeSwitchProps {
+  id                Int               @id @default(autoincrement())
+  nodeProps         NodeProps         @relation(fields: [id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  SwitchDisplayType SwitchDisplayType
+  withImage         Boolean           @default(true)
+}
+
+model NodeFileProps {
+  id        Int       @id @default(autoincrement())
+  info      String
+  url       String
+  nodeProps NodeProps @relation(fields: [id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+}
+
+model NodeAudioProps {
+  id        Int       @id @default(autoincrement())
+  src       String
+  nodeProps NodeProps @relation(fields: [id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+}
+
+model NodeImageProps {
+  id        Int       @id @default(autoincrement())
+  src       String
+  nodeProps NodeProps @relation(fields: [id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+}
+
+model NodeLinkProps {
+  id        Int       @id @default(autoincrement())
+  src       String
+  text      String
+  nodeProps NodeProps @relation(fields: [id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+}
+
+model NodeSwitchOptionProps {
+  id        Int       @id @default(autoincrement())
+  text      String
+  imageLink String
+  nodeProps NodeProps @relation(fields: [id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+}
+
+model NodeTextProps {
+  id        Int       @id @default(autoincrement())
+  src       String
+  nodeProps NodeProps @relation(fields: [id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+}
+
+model NodeVideoProps {
+  id        Int       @id @default(autoincrement())
+  src       String
+  nodeProps NodeProps @relation(fields: [id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+}
+
+model NodeWaitProps {
+  id        Int       @id @default(autoincrement())
+  src       String
+  delay     Int
+  nodeProps NodeProps @relation(fields: [id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+}
+
+model NodeCountdownProps {
+  id        Int       @id @default(autoincrement())
+  duration  Int
+  nodeProps NodeProps @relation(fields: [id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+}
+
+// Enums
+
+enum SwitchDisplayType {
+  Select
+  Carousel
+  List
+}
+
+enum NodeType {
+  Text // NodeTextProps
+  Audio //NodeAudioProps
+  Video // NodeVideoProps
+  File // NodeFileProps
+  Image //NodeImageProps
+  Link // NodeLinkProps
+  Switch // NodeSwitchProps
+  SwitchOption // NodeSwitchOptionProps
+  // SetTypingIndicator
+  Countdown
+  Wait // NodeWaitProps
+  // HttpRequest
+}

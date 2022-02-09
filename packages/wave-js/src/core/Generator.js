@@ -1,0 +1,28 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.Generator = void 0;
+var Generator;
+(function (Generator) {
+    Generator["BARS"] = "bars";
+    Generator["BARS_BLOCKS"] = "bars blocks";
+    Generator["BIG_BARS"] = "big bars";
+    Generator["CUBES"] = "cubes";
+    Generator["DUAL_BARS"] = "dualbars";
+    Generator["DUAL_BARS_BLOCKS"] = "dualbars blocks";
+    Generator["FIREWOKS"] = "fireworks";
+    Generator["FLOWER"] = "flower";
+    Generator["FLOWER_BLOCKS"] = "flower blocks";
+    Generator["ORBS"] = "orbs";
+    Generator["RING"] = "ring";
+    Generator["RINGS"] = "rings";
+    Generator["ROUND_WAVE"] = "round wave";
+    Generator["SHOCKWAVE"] = "shockwave";
+    Generator["SHINE"] = "shine";
+    Generator["SHINE_RINGS"] = "shine rings";
+    Generator["STAR"] = "star";
+    Generator["STATIC"] = "static";
+    Generator["STITCHES"] = "stitches";
+    Generator["WAVE"] = "wave";
+    Generator["WEB"] = "web";
+})(Generator = exports.Generator || (exports.Generator = {}));
+exports.default = Generator;
