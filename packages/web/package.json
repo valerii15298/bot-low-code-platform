@@ -6,7 +6,7 @@
     "dev": "vite",
     "build": "tsc && vite build --base=\"/Drawflow-react/\"",
     "serve": "vite preview",
-    "codegen": "graphql-codegen --config codegen.yml"
+    "codegen": "graphql-codegen --config codegen.yml --watch"
   },
   "dependencies": {
     "@apollo/client": "^3.5.8",
