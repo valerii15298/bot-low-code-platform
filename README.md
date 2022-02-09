@@ -21,6 +21,11 @@ pnpm -r dev & pnpm -C packages/web run codegen
 pnpm add -g concurrently
 concurrently "pnpm -r dev" "pnpm -C packages/web run codegen"
 ```
+###Any other OS:
+```bash
+pnpm add -g concurrently
+concurrently "pnpm -r dev" "pnpm -C packages/web run codegen"
+```
 
 ## Stay in touch
 
