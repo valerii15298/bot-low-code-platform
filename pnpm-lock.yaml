@@ -12,6 +12,7 @@ importers:
       apollo-server-types: ^3.5.1
       ast-types: ^0.14.2
       ast-types-flow: ^0.0.7
+      concurrently: ^7.0.0
       eslint: ^8.8.0
       eslint-config-airbnb: ^19.0.4
       eslint-config-airbnb-base: ^15.0.0
@@ -66,6 +67,7 @@ importers:
       '@nrwl/nx-cloud': 13.1.4
       '@nrwl/tao': 13.8.0
       '@nrwl/workspace': 13.8.0_eslint@8.8.0+typescript@4.5.5
+      concurrently: 7.0.0
 
   packages/api:
     specifiers:
@@ -6596,6 +6598,21 @@ packages:
       typedarray: 0.0.6
     dev: false
 
+  /concurrently/7.0.0:
+    resolution: {integrity: sha512-WKM7PUsI8wyXpF80H+zjHP32fsgsHNQfPLw/e70Z5dYkV7hF+rf8q3D+ScWJIEr57CpkO3OWBko6hwhQLPR8Pw==}
+    engines: {node: ^12.20.0 || ^14.13.0 || >=16.0.0}
+    hasBin: true
+    dependencies:
+      chalk: 4.1.2
+      date-fns: 2.28.0
+      lodash: 4.17.21
+      rxjs: 6.6.7
+      spawn-command: 0.0.2-1
+      supports-color: 8.1.1
+      tree-kill: 1.2.2
+      yargs: 16.2.0
+    dev: true
+
   /confusing-browser-globals/1.0.11:
     resolution: {integrity: sha512-JsPKdmh8ZkmnHxDk55FZ1TqVLvEQTvoByJZRN9jzI0UjxK/QgAmsphz7PGtqgPieQZ/CQcHWXCR7ATDNhGe+YA==}
 
@@ -6852,6 +6869,11 @@ packages:
 
   /date-fns/1.30.1:
     resolution: {integrity: sha512-hBSVCvSmWC+QypYObzwGOd9wqdDpOt+0wl0KbU+R+uuZBS1jN8VsD1ss3irQDknRj5NvxiTF6oj/nDRnN/UQNw==}
+    dev: true
+
+  /date-fns/2.28.0:
+    resolution: {integrity: sha512-8d35hViGYx/QH0icHYCeLmsLmMUheMmTyV9Fcm6gvNwdw31yXXH+O85sOBJ+OLnLQMKZowvpKb6FgMIQjcpvQw==}
+    engines: {node: '>=0.11'}
     dev: true
 
   /debounce/1.2.1:
@@ -14032,6 +14054,10 @@ packages:
 
   /sourcemap-codec/1.4.8:
     resolution: {integrity: sha512-9NykojV5Uih4lgo5So5dtw+f0JgJX30KCNI8gwhz2J9A15wD0Ml6tjHKwf6fTSa6fAdVBdZeNOs9eJ71qCk8vA==}
+    dev: true
+
+  /spawn-command/0.0.2-1:
+    resolution: {integrity: sha1-YvXpRmmBwbeW3Fkpk34RycaSG9A=}
     dev: true
 
   /spdx-correct/3.1.1:

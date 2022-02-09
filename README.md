@@ -12,11 +12,6 @@ pnpm -C packages/api exec prisma migrate dev --name init
 ```
 
 ## Running the app
-###Linux:
-```bash
-pnpm -r dev & pnpm -C packages/web run codegen
-```
-###Any other OS:
 ```bash
 pnpm add -g concurrently
 concurrently "pnpm -r dev" "pnpm -C packages/web run codegen"

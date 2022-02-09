@@ -1,0 +1,8 @@
+version: "0.0"
+services:
+  web:
+    build: .
+    ports:
+      - "8081:4000"
+  postgres:
+    image: "postgres"
