@@ -3,6 +3,7 @@ export const defaultBackgroundConfig = {
   blur: 50,
   imageUrl: "",
 };
+
 export const getDefaultZoomConfig = () => ({
   max: 2,
   min: 0.5,

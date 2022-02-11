@@ -54,10 +54,13 @@ export const currentBotFlow = wrapById<BotFlow>(`BotFlow:${botFlowIdParam}`);
 //@ts-ignore
 export const { data } = cache;
 
-console.log(import.meta.env)
+export const graphqlUri = import.meta.env.PROD
+  ? "/graphql"
+  : "http://localhost:3000/graphql";
+// console.log({ graphqlUri });
 
 export const apolloClient = new ApolloClient({
-  uri: "http://localhost:3000/graphql",
+  uri: graphqlUri,
   cache,
   typeDefs: [typeDefs],
 });

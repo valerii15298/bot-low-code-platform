@@ -1,14 +1,11 @@
 {
   "compilerOptions": {
     "experimentalDecorators": true,
+    "useDefineForClassFields": true,
     "target": "ESNext",
-    "lib": [
-      "DOM",
-      "DOM.Iterable",
-      "ESNext"
-    ],
+    "lib": ["DOM", "DOM.Iterable", "ESNext"],
     "allowJs": false,
-    //    "skipLibCheck": false,
+    "skipLibCheck": false,
     "esModuleInterop": false,
     "allowSyntheticDefaultImports": true,
     "strict": true,
@@ -18,17 +15,10 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
-    "jsx": "react-jsxdev",
-    "skipLibCheck": true,
+    "jsx": "react-jsx",
     "strictNullChecks": true
   },
-  "files": [
-    "src/global.d.ts", "src/client.d.ts"
-  ],
-  "exclude": [
-    "../wave.js-typescript/*"
-  ],
-  "include": [
-    "./src"
-  ]
+  "files": ["src/global.d.ts", "src/client.d.ts"],
+  "exclude": ["../wave.js-typescript/*"],
+  "include": ["./src"]
 }

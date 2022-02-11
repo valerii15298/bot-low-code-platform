@@ -4,7 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "startAll": "concurrently \"pnpm -r dev\" \"pnpm -C packages/web run codegen\""
+    "startAll": "pnpm -C packages/api exec prisma migrate deploy && pnpm -C packages/api exec prisma generate && pnpm -r dev",
+    "startWeb": "pnpm -C packages/web run dev",
+    "startDev": "echo 2",
+    "docker:clean": "docker rmi $(docker images -f \"dangling=true\" -q)"
   },
   "dependencies": {
     "apollo-codegen-typescript": "^0.40.7",
@@ -35,10 +38,6 @@
     "vscode-languageserver-types": "^3.14.0"
   },
   "devDependencies": {
-    "@nrwl/cli": "latest",
-    "@nrwl/nx-cloud": "latest",
-    "@nrwl/tao": "latest",
-    "@nrwl/workspace": "latest",
     "concurrently": "^7.0.0"
   },
   "keywords": [],

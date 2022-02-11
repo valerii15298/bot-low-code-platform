@@ -1,13 +1,24 @@
-FROM node:16
+FROM node:16-alpine
 
 WORKDIR /usr/src/app
 
-COPY . .
+RUN apk --no-cache add curl
+RUN curl -f https://get.pnpm.io/v6.16.js | node - add --global pnpm
 
-RUN npm add -g pnpm
+COPY pnpm-lock.yaml ./
 
-RUN pnpm install
+RUN pnpm fetch
 
-RUN pnpm -C packages/api exec prisma migrate dev --name init
+COPY . ./
 
-CMD [ "pnpm", "runAll" ]
+RUN pnpm -r install --offline
+RUN pnpm -r install --offline
+
+
+EXPOSE 3000
+EXPOSE 8080
+EXPOSE 8081
+EXPOSE 4000
+
+CMD ["sleep", "1000000"]
+#CMD [ "pnpm", "run", "startAll" ]

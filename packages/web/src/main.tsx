@@ -12,8 +12,10 @@ import { Provider } from "react-redux";
 import Apollo from "./graphql/apollo";
 import { Flow } from "./components/Flow";
 import "./draft";
-import "./drawflow.scss";
+// import "./drawflow.scss";
 import { store } from "./redux/store";
+
+console.log({ envVite: import.meta.env });
 
 ReactDOM.render(
   <StrictMode>

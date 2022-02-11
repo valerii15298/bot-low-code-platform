@@ -1,3 +1,5 @@
+packages/my-nextjs-app
+
 node_modules
 nx.json
 **/generated/**

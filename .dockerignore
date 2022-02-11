@@ -1,7 +1,10 @@
+packages/my-nextjs-app
+#packages/cors-server
+
 **/node_modules
 
-**/nx.json
-**/generated/**
+#**/nx.json
+# **/generated/**
 **/.env
 
 **/.DS_Store
@@ -26,4 +29,4 @@
 **/.vscode
 **/.idea
 
-/pacckages/api/prisma/migrations
+# /packages/api/prisma/migrations

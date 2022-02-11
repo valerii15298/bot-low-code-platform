@@ -1,6 +1,7 @@
 import { createSlice, current, PayloadAction } from "@reduxjs/toolkit";
 import lodash from "lodash";
 import {
+  ActionPayload,
   clientPos,
   loadType,
   moveNodeType,
@@ -8,6 +9,7 @@ import {
   ports,
   portType,
   pos,
+  processConnections,
   RecursivePartial,
   select,
   Slices,
@@ -17,6 +19,9 @@ import { Flow } from "./Flow";
 import type { RootState } from "./store";
 
 export const getDefaultStateData = (): stateData => ({
+  undoRedoActions: [],
+  isDraft: false,
+  live: false,
   canvasDrag: false,
   config: {
     drag: false,
@@ -32,8 +37,8 @@ export const getDefaultStateData = (): stateData => ({
     },
   },
   drawflow: {},
-  connections: [],
-  ports: [],
+  connections: {},
+  ports: {},
   select: null,
   newPathDirection: null,
   modalType: null,
@@ -212,6 +217,27 @@ const slice = createSlice({
         new Flow(state).setLaneNumbers();
       }
     },
+    processConnections: (
+      state: stateData,
+      { payload: { data, pushToUndoRedo } }: ActionPayload<processConnections>
+    ) => {
+      const undo: processConnections = {
+        add: [],
+        remove: data.add.map(({ id }) => id),
+      };
+      data.remove.forEach((connId) => {
+        undo.add.push(state.connections[connId]);
+        delete state.connections[connId];
+      });
+      data.add.forEach((conn) => (state.connections[conn.id] = conn));
+      pushToUndoRedo &&
+        state.undoRedoActions.push({
+          type: "processConnections",
+          undo,
+          redo: data,
+        });
+    },
+
     portMouseUp: (
       state,
       { payload: { id } }: PayloadAction<{ id: number }>

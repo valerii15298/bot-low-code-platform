@@ -1,4 +1,4 @@
-import { configureStore, createReducer } from "@reduxjs/toolkit";
+import { configureStore, createReducer, current } from "@reduxjs/toolkit";
 import lodash from "lodash";
 import { getDefaultFlowNode } from "../models/getDefaultFlowNode";
 import { getFlowInitialState } from "../models/getFlowInitialState";
@@ -151,6 +151,7 @@ const reducer = createReducer(getFlowInitialState(), (builder) => {
             y: 0,
           },
         };
+        console.log(current(state.ports));
       }
     )
     .addCase(canvasShapeUpdated, (appState, { payload }) => {

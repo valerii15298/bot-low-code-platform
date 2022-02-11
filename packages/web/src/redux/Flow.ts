@@ -67,27 +67,6 @@ export class Flow {
     ).align();
   }
 
-  /*allowConnection(conn: addConnectionType) {
-    const { startId, startPort, endId } = conn;
-    const nodeIn = this.getNode(endId);
-    const nodeOut = this.getNode(startId);
-    const connectAsSub = startPort === 2;
-
-    if (nodeIn.parent || nodeOut.nodeState.visible === false) {
-      return false;
-    }
-
-    const flowLine = nodeIn.flowLine;
-
-    if (
-      (connectAsSub || nodeOut.isSub) &&
-      (!flowLine || flowLine.hasSubnodes)
-    ) {
-      return false;
-    }
-    return true;
-  }*/
-
   // @syncTimer()
   addConnection(conn: addConnectionType) {
     const actions: { remove: idConnType[]; add: addConnectionType[] } = {
@@ -122,21 +101,21 @@ export class Flow {
     }
 
     // let startId = 0, startPort = 0
-    // Insertion to the subnodes
+    // Connect to the subnodes
     let nextNode: Node | null = null;
     if (connectAsSub && nodeFrom.subnodes.length) {
+      // connect subnode to the end when subnodes are hidden
       if (nodeFrom.nodeState.subnodesVisibility === false) {
-        // connect subnode to the end when subnodes are hidden
         fromPort = nodeFrom.subnodes.at(-1)!.portOut1;
         actions.add.push({
           fromPort,
           toPort,
-          visible: 0,
+          visible: -1,
         });
-        const { flowLineNodes } = flowLine as { flowLineNodes: Node[] };
-        flowLineNodes.forEach((node) => node.toggleVisibility(false));
         return actions;
       } else {
+        // connect between node and first subnode, so set next node to
+        // first subnode to insert it later
         nextNode = nodeFrom.subnodes[0];
       }
     }
@@ -146,6 +125,7 @@ export class Flow {
       nextNode = nodeFrom.out1[0];
     }
 
+    // insert between
     if (nextNode) {
       const connToDelete = Object.values(this.state.connections).find(
         (conn) =>

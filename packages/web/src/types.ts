@@ -1,5 +1,6 @@
 import { ReadFieldOptions } from "@apollo/client/cache";
 import { BotFlowQuery } from "./generated/graphql-request";
+import { PayloadAction } from "@reduxjs/toolkit";
 
 export enum Slices {
   Drawflow = "drawflow",
@@ -53,6 +54,7 @@ export interface Port extends purePort {
 export type idPortType = number;
 export type idNodeType = number;
 export type idConnType = number;
+export type processConnections = { add: connection[]; remove: idConnType[] };
 
 export type ports = Record<idPortType, Port>;
 
@@ -159,7 +161,22 @@ export type select = {
   selectId: number;
 };
 
+export type processConnectionsAction = {
+  type: "processConnections";
+  undo: processConnections;
+  redo: processConnections;
+};
+
+export type ActionPayload<T> = PayloadAction<{
+  data: T;
+  pushToUndoRedo: boolean;
+}>;
+
+export type undoRedoActionType = processConnectionsAction;
+
 export interface stateData {
+  isDraft: boolean;
+  live: boolean;
   canvasDrag: boolean;
   config: {
     drag: boolean;
@@ -171,6 +188,7 @@ export interface stateData {
       tick: number;
     };
   };
+  undoRedoActions: Array<undoRedoActionType>;
   drawflow: drawflow;
   modalType: string | null;
   newPathDirection: clientPos | null;

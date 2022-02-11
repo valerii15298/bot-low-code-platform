@@ -3,27 +3,20 @@ import { GraphQLClient } from "graphql-request";
 import { getSdk } from "../generated/graphql-request";
 import {
   connection,
-  connections,
-  drawflow,
   flowType,
   idConnType,
   idNodeType,
   idPortType,
   node,
   Port,
-  ports,
   portType,
-  RecursivePartial,
-  stateData,
+  processConnections,
 } from "../types";
-import {
-  actions,
-  getDefaultStateData,
-  selectActiveDrawflow,
-} from "./drawflowSlice";
+import { actions, selectActiveDrawflow } from "./drawflowSlice";
 import { Flow } from "./Flow";
+import { graphqlUri } from "../graphql/apollo";
 
-const client = new GraphQLClient("http://localhost:3000/graphql");
+const client = new GraphQLClient(graphqlUri);
 const sdk = getSdk(client);
 
 export const fetchBotFlow = createAsyncThunk("fetchBotFlow", async () => {
@@ -180,6 +173,31 @@ export const updateFlowNode = createAsyncThunk("updateFlowNode", () => {
   console.log("updateFlowNode");
 });
 
+const getId = () => Math.random();
+
+export const undoThunk = createAsyncThunk(
+  "undoThunk",
+  (_, { getState, dispatch }) => {
+    const state = selectActiveDrawflow(getState() as flowType);
+    const lastAction = state.undoRedoActions.at(-1);
+    if (lastAction) {
+      dispatch(
+        actions[lastAction.type]({
+          data: lastAction.undo,
+          pushToUndoRedo: false,
+        })
+      );
+    }
+  }
+);
+
+// export const processConnectionsServer = createAsyncThunk(
+//   "processConnectionsServer",
+//   (connections: processConnections) => {
+//
+//   }
+// );
+
 export const canvasMouseUp = createAsyncThunk(
   "canvasMouseUp",
   (_, { dispatch, getState }) => {
@@ -198,15 +216,25 @@ export const canvasMouseUp = createAsyncThunk(
           id: flow.getNode(endId).inPort.id,
         },
       });
-      // process conns:
-      // delete conns, add generated ids to new ones,
-      // insert into state new ones,
-      // send to server as transactions,
-      // if fail on server then:
-      //    show error,
-      //    keep local stop merging,
-      //    push into queue to process as transaction
-      //    and push to server later when will be online
+      const addWithIds: connection[] = conns.add.map((conn) => ({
+        ...conn,
+        id: getId(),
+        visible: 0,
+      }));
+      const connsWithIds = { ...conns, add: addWithIds };
+      // if (state.isDraft) {
+      // }
+      /* check if in live mode mode
+       if in live mode then:
+       process conns:
+       delete conns, add generated ids to new ones,
+      insert into state new ones,
+       send to server as transactions,
+       if fail on server then:
+          show error,
+          keep local stop merging,
+          push into queue to process as transaction
+          and push to server later when will be online*/
     }
     dispatch(actions.canvasMouseUp());
   }

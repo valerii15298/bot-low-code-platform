@@ -5241,6 +5241,7 @@ type Query {
   aggregatePort(cursor: PortWhereUniqueInput, orderBy: [PortOrderByWithRelationInput!], skip: Int, take: Int, where: PortWhereInput): AggregatePort!
   aggregateTemplateNode(cursor: TemplateNodeWhereUniqueInput, orderBy: [TemplateNodeOrderByWithRelationInput!], skip: Int, take: Int, where: TemplateNodeWhereInput): AggregateTemplateNode!
   aggregateTemplateNodesGroup(cursor: TemplateNodesGroupWhereUniqueInput, orderBy: [TemplateNodesGroupOrderByWithRelationInput!], skip: Int, take: Int, where: TemplateNodesGroupWhereInput): AggregateTemplateNodesGroup!
+  bestUser: String
   botFlow(where: BotFlowWhereUniqueInput!): BotFlow
   botFlowVersion(where: BotFlowVersionWhereUniqueInput!): BotFlowVersion
   botFlowVersions(cursor: BotFlowVersionWhereUniqueInput, distinct: [BotFlowVersionScalarFieldEnum!], orderBy: [BotFlowVersionOrderByWithRelationInput!], skip: Int, take: Int, where: BotFlowVersionWhereInput): [BotFlowVersion!]!

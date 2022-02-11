@@ -5,6 +5,12 @@
       <excludeFolder url="file://$MODULE_DIR$/temp" />
       <excludeFolder url="file://$MODULE_DIR$/.tmp" />
       <excludeFolder url="file://$MODULE_DIR$/tmp" />
+      <excludeFolder url="file://$MODULE_DIR$/packages/api/prisma/generated" />
+      <excludeFolder url="file://$MODULE_DIR$/packages/api/prisma/migrations" />
+      <excludeFolder url="file://$MODULE_DIR$/packages/wave-js/.idea" />
+      <excludeFolder url="file://$MODULE_DIR$/packages/wave-js/coverage" />
+      <excludeFolder url="file://$MODULE_DIR$/packages/web/dist" />
+      <excludeFolder url="file://$MODULE_DIR$/packages/my-nextjs-app" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
