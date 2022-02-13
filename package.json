@@ -4,10 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "startAlld": "pnpm -C packages/cors-server run dev",
     "startAll": "pnpm -C packages/api exec prisma migrate deploy && pnpm -C packages/api exec prisma generate && pnpm -r dev",
     "startWeb": "pnpm -C packages/web run dev",
-    "startDev": "echo 2",
+    "startTest": "echo 2",
     "docker:clean": "docker rmi $(docker images -f \"dangling=true\" -q)"
   },
   "dependencies": {
