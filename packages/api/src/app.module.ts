@@ -16,6 +16,7 @@ import {
 } from 'type-graphql';
 import { ServeStaticModule } from '@nestjs/serve-static';
 // import { RedisPubSub } from 'graphql-redis-subscriptions';
+import { PubSub as InMemoryPubSub } from 'graphql-subscriptions';
 // const pubSub = new RedisPubSub();
 
 interface Context {

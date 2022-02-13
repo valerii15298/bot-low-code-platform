@@ -56,7 +56,7 @@ export const fetchBotFlow = createAsyncThunk("fetchBotFlow", async () => {
   return Object.fromEntries(arr);
 });
 
-export const corsUrl = "http://localhost:8080/";
+export const corsUrl = "/corsproxy/";
 
 const apiUrl = "https://tastypoints.io/akm/restapi.php";
 const baseUrl = corsUrl + apiUrl;
