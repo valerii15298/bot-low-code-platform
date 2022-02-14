@@ -16,7 +16,7 @@ import { actions, selectActiveDrawflow } from "./drawflowSlice";
 import { Flow } from "./Flow";
 import { graphqlUri } from "../graphql/apollo";
 
-const client = new GraphQLClient(graphqlUri);
+const client = new GraphQLClient(graphqlUri!);
 const sdk = getSdk(client);
 
 export const fetchBotFlow = createAsyncThunk("fetchBotFlow", async () => {
@@ -56,9 +56,14 @@ export const fetchBotFlow = createAsyncThunk("fetchBotFlow", async () => {
   return Object.fromEntries(arr);
 });
 
-export const corsUrl = "/corsproxy/";
+export const corsUrl =
+  import.meta.env.PROD && import.meta.env.VITE_CORS_PATH
+    ? import.meta.env.VITE_CORS_PATH
+    : "http://localhost:8080";
 
-const apiUrl = "https://tastypoints.io/akm/restapi.php";
+const apiUrl = import.meta.env.PROD
+  ? import.meta.env.VITE_TASTY_POINTS_API
+  : "https://tastypoints.io/akm/restapi.php";
 const baseUrl = corsUrl + apiUrl;
 
 export const getFileUrl = async (file: File) => {
@@ -67,7 +72,7 @@ export const getFileUrl = async (file: File) => {
   const formData = new FormData();
   formData.append("profile_picture", file);
   const response = await fetch(
-    `${corsUrl}https://tastypoints.io/akm/upload_image_process.php`,
+    `${corsUrl}${import.meta.env.VITE_TASTY_POINTS_API_UPLOAD_FILE}`,
     {
       method: "POST",
       body: formData,

@@ -17,7 +17,7 @@ import {
 import { ServeStaticModule } from '@nestjs/serve-static';
 // import { RedisPubSub } from 'graphql-redis-subscriptions';
 import { PubSub as InMemoryPubSub } from 'graphql-subscriptions';
-// const pubSub = new RedisPubSub();
+// const pubSub = new InMemoryPubSub();
 
 interface Context {
   prisma: PrismaClient;
@@ -34,9 +34,6 @@ export class LogAccess implements MiddlewareInterface {
   constructor(@PubSub() private pubSub: PubSubEngine) {}
 
   async use(ddd: ResolverData, next: NextFn): Promise<any> {
-    // console.log({ context, p: this.pubSub });
-    // console.log({ ddd });
-    console.log('Middleware');
     return next();
   }
 }
@@ -55,7 +52,7 @@ class CustomUserResolver {
   imports: [
     ServeStaticModule.forRoot({
       rootPath: path.resolve(__dirname, '../../../web/dist'),
-      serveRoot: '/web/',
+      serveRoot: process.env.WEB_BASE_APP_PATH,
     }),
     // use the TypeGraphQLModule to expose Prisma by GraphQL
     TypeGraphQLModule.forRoot({

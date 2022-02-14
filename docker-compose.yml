@@ -3,14 +3,10 @@ services:
   web:
     build: .
     ports:
-      - "8081:3000"
-    environment:
-      - SERVER_URL=http://web:3000
-      - CORS_URL=http://web:8080
-      - POSTGRES_URL=postgresql://postgres:postgrespassword@postgres:5432
-      - DATABASE_URL=postgresql://postgres:postgrespassword@postgres:5432
+      - "${LOCAL_CLIENT_PORT}:${SERVER_PORT}"
+    env_file:
+      - .env
   postgres:
     image: "postgres"
-    environment:
-      - POSTGRES_PASSWORD=postgrespassword
-      - POSTGRES_USER=postgres
+    env_file:
+      - .env

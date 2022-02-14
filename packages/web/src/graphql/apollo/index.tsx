@@ -55,9 +55,9 @@ export const currentBotFlow = wrapById<BotFlow>(`BotFlow:${botFlowIdParam}`);
 export const { data } = cache;
 
 export const graphqlUri = import.meta.env.PROD
-  ? "/graphql"
+  ? import.meta.env.VITE_GRAPHQL_API_PATH
   : "http://localhost:3000/graphql";
-// console.log({ graphqlUri });
+console.log({ graphqlUri });
 
 export const apolloClient = new ApolloClient({
   uri: graphqlUri,
