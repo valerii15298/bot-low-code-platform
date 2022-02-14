@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "dev": "node index.js",
-    "prod": "echo \"Error: no prod specified\" && exit 1"
+    "prod": "node index.js"
   },
   "keywords": [],
   "author": "",

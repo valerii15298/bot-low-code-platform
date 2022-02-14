@@ -4,8 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "startAll": "pnpm -C packages/web run codegen & pnpm -C packages/api exec prisma migrate deploy && pnpm -C packages/api exec prisma generate && pnpm -r dev",
-    "startWeb": "pnpm -C packages/web run dev",
+    "start:prod": "pnpm -r build && pnpm -r prod",
     "startTest": "echo 2",
     "docker:clean": "docker rmi $(docker images -f \"dangling=true\" -q)"
   },

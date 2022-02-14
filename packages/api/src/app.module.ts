@@ -48,6 +48,8 @@ class CustomUserResolver {
   }
 }
 
+console.log(process.env.DATABASE_URL, process.env.WEB_BASE_APP_PATH);
+
 @Module({
   imports: [
     ServeStaticModule.forRoot({

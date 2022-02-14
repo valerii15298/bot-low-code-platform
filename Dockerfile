@@ -21,4 +21,4 @@ RUN --mount=type=cache,id=pnpm-store,target=/root/.pnpm-store\
 
 EXPOSE 3000
 
-CMD [ "pnpm", "run", "startAll" ]
+CMD [ "pnpm", "run", "start:prod" ]

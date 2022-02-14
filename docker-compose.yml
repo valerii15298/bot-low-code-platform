@@ -6,7 +6,10 @@ services:
       - "${LOCAL_CLIENT_PORT}:${SERVER_PORT}"
     env_file:
       - .env
+      - .env.production
+
   postgres:
     image: "postgres"
     env_file:
       - .env
+      - .env.production

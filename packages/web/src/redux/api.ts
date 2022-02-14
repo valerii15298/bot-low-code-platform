@@ -59,7 +59,7 @@ export const fetchBotFlow = createAsyncThunk("fetchBotFlow", async () => {
 export const corsUrl =
   import.meta.env.PROD && import.meta.env.VITE_CORS_PATH
     ? import.meta.env.VITE_CORS_PATH
-    : "http://localhost:8080";
+    : "http://localhost:8080/";
 
 const apiUrl = import.meta.env.PROD
   ? import.meta.env.VITE_TASTY_POINTS_API
