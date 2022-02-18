@@ -218,6 +218,7 @@ export class Flow {
   toggleAvailablePortToConnect(nodeId: number) {
     if (!this.state.config.drag) {
       this.state.portToConnect = null;
+      console.log("Nullll");
       return;
     }
     const currentNode = this.getNode(nodeId);
@@ -257,6 +258,7 @@ export class Flow {
         });
       });
 
+    console.log(nearestPort);
     if (nearestPort) {
       this.state.portToConnect = nearestPort.port;
     } else {

@@ -227,8 +227,8 @@ export const canvasMouseUp = createAsyncThunk(
         visible: 0,
       }));
       const connsWithIds = { ...conns, add: addWithIds };
-      // if (state.isDraft) {
-      // }
+      if (state.isDraft) {
+      }
       /* check if in live mode mode
        if in live mode then:
        process conns:

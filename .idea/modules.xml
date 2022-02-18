@@ -3,7 +3,6 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/bot-low-code-platform.iml" filepath="$PROJECT_DIR$/.idea/bot-low-code-platform.iml" />
-      <module fileurl="file://$PROJECT_DIR$/../stack-overflow/ts/.idea/ts.iml" filepath="$PROJECT_DIR$/../stack-overflow/ts/.idea/ts.iml" />
     </modules>
   </component>
 </project>

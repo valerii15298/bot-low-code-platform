@@ -3,6 +3,7 @@ import { useEffect } from "react";
 
 import "react-toggle/style.css";
 import styled from "styled-components";
+import { Chat } from "../chat/Chat";
 import { fetchBotFlow } from "../redux/api";
 import { useAppDispatch, useAppSelector } from "../redux/hooks";
 import { mainWindow, sideWindow } from "../types";

@@ -1,6 +1,6 @@
 import { Injectable, Module, Provider } from '@nestjs/common';
 import { PrismaClient } from '@prisma/client';
-import { resolvers } from '../prisma/generated/type-graphql';
+import { resolvers } from '@generated/type-graphql';
 import { TypeGraphQLModule } from 'typegraphql-nestjs';
 import path from 'path';
 import {
@@ -16,7 +16,7 @@ import {
 } from 'type-graphql';
 import { ServeStaticModule } from '@nestjs/serve-static';
 // import { RedisPubSub } from 'graphql-redis-subscriptions';
-import { PubSub as InMemoryPubSub } from 'graphql-subscriptions';
+// import { PubSub as InMemoryPubSub } from 'graphql-subscriptions';
 // const pubSub = new InMemoryPubSub();
 
 interface Context {
@@ -26,7 +26,7 @@ const prisma = new PrismaClient();
 
 const emitSchemaFile = path.resolve(
   __dirname,
-  '../../../web/src/graphql/schema.graphql',
+  '../../../packages/web/src/graphql/schema.graphql',
 );
 
 @Injectable()
