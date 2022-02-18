@@ -91,7 +91,7 @@ const Port = (port: purePort) => {
         })
       );
     }
-  }, [dispatch, nodePos]);
+  }, [dispatch, nodePos, port.id]);
 
   const toggleSubnodes = (
     e: MouseEvent<HTMLDivElement, globalThis.MouseEvent>
@@ -145,6 +145,7 @@ const Port = (port: purePort) => {
         }
       }}
     >
+      {port.id}
       <Indicator visible={isActive} />
     </StyledPort>
   );

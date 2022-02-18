@@ -18,6 +18,7 @@ import { typeDefs } from "../local-schema";
 import { TestApp } from "./testApp";
 import { typePolicies } from "./typePolicies";
 import { wrap } from "./wrap";
+import React from "react";
 
 export const cache = new InMemoryCache({
   possibleTypes: introspectionQueryResultData.possibleTypes,

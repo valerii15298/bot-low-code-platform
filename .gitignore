@@ -16,7 +16,7 @@ dist-ssr
 # compiled output
 /dist
 /node_modules
-
+packages/web/src/graphql/schema.graphql
 # Logs
 logs
 *.log

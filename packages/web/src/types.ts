@@ -169,7 +169,7 @@ export type processConnectionsAction = {
 
 export type ActionPayload<T> = PayloadAction<{
   data: T;
-  pushToUndoRedo: boolean;
+  pushToUndoRedo?: boolean;
 }>;
 
 export type undoRedoActionType = processConnectionsAction;

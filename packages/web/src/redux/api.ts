@@ -57,13 +57,11 @@ export const fetchBotFlow = createAsyncThunk("fetchBotFlow", async () => {
 });
 
 export const corsUrl =
-  import.meta.env.PROD && import.meta.env.VITE_CORS_PATH
-    ? import.meta.env.VITE_CORS_PATH
-    : "http://localhost:8080/";
+  import.meta.env.VITE_CORS_PATH ?? "http://localhost:8080/";
 
-const apiUrl = import.meta.env.PROD
-  ? import.meta.env.VITE_TASTY_POINTS_API
-  : "https://tastypoints.io/akm/restapi.php";
+const apiUrl =
+  import.meta.env.VITE_TASTY_POINTS_API ??
+  "https://tastypoints.io/akm/restapi.php";
 const baseUrl = corsUrl + apiUrl;
 
 export const getFileUrl = async (file: File) => {
@@ -228,6 +226,9 @@ export const canvasMouseUp = createAsyncThunk(
       }));
       const connsWithIds = { ...conns, add: addWithIds };
       if (state.isDraft) {
+        dispatch(actions.processConnections({ data: connsWithIds }));
+      } else if (state.live) {
+        dispatch(actions.processConnections({ data: connsWithIds }));
       }
       /* check if in live mode mode
        if in live mode then:
@@ -237,7 +238,7 @@ export const canvasMouseUp = createAsyncThunk(
        send to server as transactions,
        if fail on server then:
           show error,
-          keep local stop merging,
+          keep local, stop merging,
           push into queue to process as transaction
           and push to server later when will be online*/
     }

@@ -1068,6 +1068,10 @@ input ConnectionWhereUniqueInput {
   to: Int
 }
 
+input ConnectionsWhere {
+  where: ConnectionWhereInput!
+}
+
 """
 The javascript `Date` as string. Type represents date and time as the ISO Date string.
 """
@@ -1799,6 +1803,7 @@ type Mutation {
   deletePort(where: PortWhereUniqueInput!): Port
   deleteTemplateNode(where: TemplateNodeWhereUniqueInput!): TemplateNode
   deleteTemplateNodesGroup(where: TemplateNodesGroupWhereUniqueInput!): TemplateNodesGroup
+  processConnections(add: [ConnectionCreateManyInput!]!, remove: ConnectionsWhere!): ProcessedConnections!
   updateBotFlow(data: BotFlowUpdateInput!, where: BotFlowWhereUniqueInput!): BotFlow
   updateBotFlowVersion(data: BotFlowVersionUpdateInput!, where: BotFlowVersionWhereUniqueInput!): BotFlowVersion
   updateConnection(data: ConnectionUpdateInput!, where: ConnectionWhereUniqueInput!): Connection
@@ -5219,6 +5224,11 @@ input PortWhereInput {
 
 input PortWhereUniqueInput {
   id: Int
+}
+
+type ProcessedConnections {
+  added: [Connection!]!
+  removed: [Connection!]!
 }
 
 type Query {

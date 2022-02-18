@@ -1,12 +1,26 @@
 import { Injectable, Module, Provider } from '@nestjs/common';
-import { PrismaClient } from '@prisma/client';
-import { resolvers } from '@generated/type-graphql';
+import {
+  Connection,
+  ConnectionCreateManyInput,
+  DeleteManyConnectionArgs,
+  resolvers,
+  ConnectionCrudResolver,
+  ConnectionWhereInput,
+} from '../prisma/generated/type-graphql';
 import { TypeGraphQLModule } from 'typegraphql-nestjs';
 import path from 'path';
+
 import {
+  Arg,
+  Args,
+  ArgsType,
   Ctx,
+  Field,
+  InputType,
   MiddlewareInterface,
+  Mutation,
   NextFn,
+  ObjectType,
   PubSub,
   PubSubEngine,
   Query,
@@ -15,6 +29,7 @@ import {
   UseMiddleware,
 } from 'type-graphql';
 import { ServeStaticModule } from '@nestjs/serve-static';
+import { PrismaClient } from '@prisma/client';
 // import { RedisPubSub } from 'graphql-redis-subscriptions';
 // import { PubSub as InMemoryPubSub } from 'graphql-subscriptions';
 // const pubSub = new InMemoryPubSub();
@@ -22,11 +37,12 @@ import { ServeStaticModule } from '@nestjs/serve-static';
 interface Context {
   prisma: PrismaClient;
 }
+
 const prisma = new PrismaClient();
 
 const emitSchemaFile = path.resolve(
   __dirname,
-  '../../../packages/web/src/graphql/schema.graphql',
+  '../../../web/src/graphql/schema.graphql',
 );
 
 @Injectable()
@@ -38,6 +54,30 @@ export class LogAccess implements MiddlewareInterface {
   }
 }
 
+@InputType()
+class ConnectionsWhere {
+  @Field((type) => ConnectionWhereInput)
+  where: ConnectionWhereInput;
+}
+
+@ArgsType()
+class ProcessConnectionsArgs {
+  @Field((type) => [ConnectionCreateManyInput])
+  add: ConnectionCreateManyInput[];
+
+  @Field((type) => ConnectionsWhere)
+  remove: ConnectionsWhere;
+}
+
+@ObjectType()
+class ProcessedConnections {
+  @Field((type) => [Connection])
+  added: Connection[];
+
+  @Field((type) => [Connection])
+  removed: Connection[];
+}
+
 @Resolver(String)
 class CustomUserResolver {
   @Query((returns) => String, { nullable: true })
@@ -45,6 +85,16 @@ class CustomUserResolver {
   async bestUser(@Ctx() { prisma }: Context, @PubSub() pubSub: PubSubEngine) {
     // console.log({ pubSub });
     return 'You are the best of the best!!:)))';
+  }
+
+  @Mutation((returns) => ProcessedConnections)
+  async processConnections(
+    @Args() { add, remove }: ProcessConnectionsArgs,
+    @Ctx() { prisma }: Context,
+  ): Promise<ProcessedConnections> {
+    prisma.connection.createMany({ data: add });
+    prisma.connection.deleteMany(remove);
+    return { added: [], removed: [] };
   }
 }
 
