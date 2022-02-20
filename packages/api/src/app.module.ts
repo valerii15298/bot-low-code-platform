@@ -50,7 +50,7 @@ const prisma = new PrismaClient();
       playground: true,
       introspection: true,
       // path: process.env.GRAPHQL_API_PATH,
-      validate: true,
+      validate: false,
       context: () => ({ prisma }),
       globalMiddlewares: [LogAccess],
       // pubSub,

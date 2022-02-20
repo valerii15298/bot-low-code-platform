@@ -175,12 +175,12 @@ export const commitFlowVersionThunk = createAsyncThunk(
           from: conn.fromPort.id,
           to: conn.toPort.id,
         })),
-        nodes: Object.values(drawflow).map(({ info, NodeProps }) => {
+        nodes: Object.values(drawflow).map(({ info, NodeProps, id }) => {
           const { type } = NodeProps;
           const propsKey = `Node${type}Props` as const;
           const props = NodeProps[propsKey];
           return {
-            flow: { connect: { id: appState.version } },
+            flow: { connect: { id: appState.version + 1 } },
             info: { create: exclude(info, "id") },
             NodeProps: {
               create: {
@@ -190,10 +190,12 @@ export const commitFlowVersionThunk = createAsyncThunk(
             },
             ports: {
               createMany: {
-                data: Object.values(ports).map((port) => ({
-                  id: port.id,
-                  index: port.portId + Number(port.type === portType.out),
-                })),
+                data: Object.values(ports)
+                  .filter((port) => port.nodeId === id)
+                  .map((port) => ({
+                    id: port.id,
+                    index: port.portId + Number(port.type === portType.out),
+                  })),
               },
             },
           };

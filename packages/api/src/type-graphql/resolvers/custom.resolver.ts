@@ -51,9 +51,10 @@ export class CustomResolver {
 
   @Mutation((_returns) => BotFlowVersion)
   async commitFlowVersion(
-    @Args() { connections, nodes, botFlowId }: CommitFlowVersionArgs,
+    @Args() args: CommitFlowVersionArgs,
     @Ctx() { prisma }: Context,
   ): Promise<BotFlowVersion> {
+    const { connections, nodes, botFlowId } = args;
     let versionsCount = await prisma.botFlowVersion.count({
       where: { botFlowId },
     });
@@ -64,11 +65,14 @@ export class CustomResolver {
     const portsIdsMap: Record<number, number> = {};
 
     const promises = nodes.map(async (node) => {
+      node.flow.connect.id = flowVersion.id;
       const clientIds: number[] = [];
       node.ports.createMany.data.forEach((port) => {
         clientIds.push(port.id);
         delete port.id;
       });
+
+      // console.dir({ node }, { depth: 100 });
       const { ports } = await prisma.flowNode.create({
         data: node,
         include: { ports: true },
@@ -79,6 +83,8 @@ export class CustomResolver {
     });
     await Promise.all(promises);
     connections.forEach((conn) => {
+      delete conn.id;
+      conn.botFlowVersionId = flowVersion.id;
       if (conn.to in portsIdsMap) {
         conn.to = portsIdsMap[conn.to];
       }
@@ -86,6 +92,7 @@ export class CustomResolver {
         conn.from = portsIdsMap[conn.from];
       }
     });
+    // console.log({ connections });
     await prisma.connection.createMany({ data: connections });
 
     return prisma.botFlowVersion.findUnique({
