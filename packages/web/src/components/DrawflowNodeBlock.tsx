@@ -8,10 +8,10 @@ import {
   useNodeIsSelected,
   useNodePos,
 } from "../redux/selectors";
-import { ObjectKeys } from "../types";
 import { Block } from "./NodeComponents";
 import { Ports } from "./Ports";
 import { BlockStyled } from "./StyledComponents";
+import { ObjectKeys } from "../types/helpers";
 
 const DrawflowNodeBlock = ({ id }: { id: number }) => {
   // console.log(`Render node id: ${id}`);

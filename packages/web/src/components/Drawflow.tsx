@@ -9,7 +9,7 @@ import {
   insertCopiedNode,
   setStateAction,
 } from "../redux/actions";
-import { postFlowVersion } from "../redux/api";
+import { canvasMouseUpThunk, commitFlowVersionThunk } from "../redux/api";
 import { actions } from "../redux/drawflowSlice";
 import {
   useAppDispatch,
@@ -17,7 +17,6 @@ import {
   useLocalStorage,
 } from "../redux/hooks";
 import { useActiveFlow } from "../redux/selectors";
-import { canvasShape, LocalStorageKey, pureTemplateNode } from "../types";
 import { ConnectionList } from "./ConnectionList";
 import DrawflowZoomArea from "./DrawflowZoomArea";
 import { NewPath } from "./NewPath";
@@ -31,6 +30,11 @@ import {
 } from "./StyledComponents";
 
 import gg from "../graphql/operations.graphql";
+import { removeActiveConnectionThunk } from "../redux/thunks/removeConnection";
+import { LocalStorageKey } from "../spacing";
+import { pureTemplateNode } from "../types/node.types";
+import { canvasShape } from "../types/helpers";
+import { removeActiveFlowNodeThunk } from "../redux/thunks/removeActiveFlowNodeThunk";
 
 // console.log({ gg });
 
@@ -136,7 +140,7 @@ export const Drawflow = () => {
       };
       dispatch(setStateAction({ precanvas: payload }));
     }
-  });
+  }, [dispatch]);
 
   const { opacity, blur, imageUrl } = useAppSelector(
     (s) => s.windowConfig.background
@@ -151,8 +155,10 @@ export const Drawflow = () => {
       tabIndex={0}
       onKeyDownCapture={(e) => {
         if (e.key === "Delete") {
-          dispatch(actions.deletePath());
-          dispatch(actions.deleteNode());
+          // dispatch(actions.deletePath());
+          dispatch(removeActiveConnectionThunk());
+          dispatch(removeActiveFlowNodeThunk());
+          // dispatch(actions.deleteNode());
         }
         if (e.ctrlKey && e.key === "c") {
           dispatch(actions.copyNode());
@@ -166,8 +172,9 @@ export const Drawflow = () => {
         dispatch(actions.unSelect());
       }}
       onMouseUp={() => {
-        dispatch(actions.canvasMouseUp());
+        // dispatch(actions.canvasMouseUp());
         // dispatch(alignCurrentFlow());
+        dispatch(canvasMouseUpThunk());
         dispatch(actions.alignCurrentFlow());
       }}
       onMouseMove={(e) => {
@@ -232,7 +239,7 @@ export const Drawflow = () => {
       <CommitFlowButton
         onClick={(e) => {
           e.preventDefault();
-          dispatch(postFlowVersion());
+          dispatch(commitFlowVersionThunk());
         }}
       >
         Commit

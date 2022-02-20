@@ -15,7 +15,9 @@ export const Path = (props: Props) => {
 
   return (
     <Svg>
+      <title>{id}</title>
       <StyledPath
+        id={`path${id}`}
         selected={selected}
         d={d}
         onMouseDown={(e) => {
@@ -30,6 +32,20 @@ export const Path = (props: Props) => {
           );
         }}
       />
+      {import.meta.env.DEV && (
+        <text>
+          <textPath
+            href={`#path${id}`}
+            startOffset="50%"
+            textAnchor="middle"
+            fontSize={"1.2em"}
+            fill={"violet"}
+            fontWeight="bold"
+          >
+            {id}
+          </textPath>
+        </text>
+      )}
     </Svg>
   );
 };

@@ -3,36 +3,42 @@ import settingsPng from "../assets/flowsettings.png";
 import { setStateAction } from "../redux/actions";
 import { postFlow } from "../redux/api";
 import { useAppDispatch, useAppSelector } from "../redux/hooks";
-import { mainWindow, sideWindow } from "../types";
 import { SelectFlowVersion } from "./SelectFlowVersion";
 import { ToggleSidebar } from "./Sidebar";
 import {
   ActiveLabel,
   Controls,
   DeleteFlowButton,
-  FlowInfo,
   FlowSubtitle,
   FlowTitle,
   HeaderSection,
   InfoDiv,
   SaveFlowButton,
   ToggleButton,
-  ToggleSection,
 } from "./StyledComponents";
+import { FormControlLabel, Switch } from "@mui/material";
+import { actions, selectActiveDrawflow } from "../redux/drawflowSlice";
+import { mainWindow, sideWindow } from "../spacing";
 
 export const Header = () => {
   const dispatch = useAppDispatch();
-  const flowInfo = useAppSelector((s) => s.flowInfo);
+  const isLive = useAppSelector((s) => selectActiveDrawflow(s).live);
+  const isDraft = useAppSelector((s) => selectActiveDrawflow(s).isDraft);
 
   const sidebarVisible = useAppSelector((s) => s.sidebarVisible) ?? true;
   const mainId = useAppSelector((s) => s.windowConfig.mainId);
 
-  const { flow_name, flow_description, flow_active } = flowInfo || {};
+  // TODO get data from apollo
+  const { flow_name, flow_description, flow_active } = {
+    flow_description: "desc",
+    flow_name: "name",
+    flow_active: true,
+  };
   // console.log({ flow_active });
 
   return (
     <HeaderSection>
-      <FlowInfo>
+      <Controls>
         {!sidebarVisible ? <ToggleSidebar /> : null}
         {/*<CircleSpan>*/}
         {/*  <Arrow height={14} />*/}
@@ -41,9 +47,9 @@ export const Header = () => {
           <FlowTitle>{flow_name || "Loading ..."}</FlowTitle>
           <FlowSubtitle>{flow_description || "Loading ..."}</FlowSubtitle>
         </InfoDiv>
-      </FlowInfo>
+      </Controls>
 
-      <ToggleSection>
+      <Controls>
         <ToggleButton
           onClick={() =>
             dispatch(
@@ -75,13 +81,7 @@ export const Header = () => {
                 checked: null,
                 unchecked: null,
               }}
-              onChange={(e) =>
-                dispatch(
-                  setStateAction({
-                    flowInfo: { flow_active: +e.target.checked },
-                  })
-                )
-              }
+              onChange={(e) => console.log("toggle")}
             />
           </ActiveLabel>
         </ToggleButton>
@@ -96,8 +96,26 @@ export const Header = () => {
         >
           <img src={settingsPng} alt="" />
         </ToggleButton>
-      </ToggleSection>
-      {mainId === mainWindow.mainFlow && <SelectFlowVersion />}
+      </Controls>
+      {mainId === mainWindow.mainFlow && (
+        <Controls>
+          <FormControlLabel
+            disabled={isDraft}
+            control={
+              <Switch
+                checked={isLive}
+                onChange={(e) => {
+                  dispatch(actions.setState({ live: e.target.checked }));
+                }}
+              />
+            }
+            label="Live:"
+            labelPlacement={"start"}
+            sx={{ mr: 2 }}
+          />
+          <SelectFlowVersion />
+        </Controls>
+      )}
 
       <Controls>
         <DeleteFlowButton>Delete flow</DeleteFlowButton>

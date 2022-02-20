@@ -1,6 +1,6 @@
 // @ts-ignore
 import { Flow } from "../redux/Flow";
-import { stateData } from "../types";
+import { stateData } from "../types/currentBotFlowVersion";
 
 let running = false;
 

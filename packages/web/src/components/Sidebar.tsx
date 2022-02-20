@@ -3,7 +3,6 @@ import { useTemplateNodesGroupsQuery } from "../generated/apollo";
 import { setStateAction, toggleSidebar } from "../redux/actions";
 import { useAppDispatch, useAppSelector } from "../redux/hooks";
 import { Arrows, SearchIcon, SettingsIcon } from "../svg";
-import { sideWindow } from "../types";
 import {
   ExpandDiv,
   GroupItemDiv,
@@ -15,6 +14,7 @@ import {
   SidebarDiv,
 } from "./StyledComponents";
 import FilterList from "./TemplateNodesList";
+import { sideWindow } from "../spacing";
 
 const GroupList = ({
   selectedGroup,

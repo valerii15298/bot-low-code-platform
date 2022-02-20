@@ -4,12 +4,14 @@ import styled, { css } from "styled-components";
 import { actions, selectActiveDrawflow } from "../redux/drawflowSlice";
 import { useAppDispatch, useAppSelector } from "../redux/hooks";
 import { useNodeIsSub, useNodePos, usePortIsActive } from "../redux/selectors";
-import { portType, purePort } from "../types";
+import { portType } from "../spacing";
+import { purePort } from "../types/port.types";
 
 const Indicator = styled.div<{ visible: boolean }>`
-  width: 15px;
-  height: 15px;
-  border-radius: 60px;
+  width: 1em;
+  height: 1em;
+  flex-shrink: 0;
+  border-radius: 50%;
   background-color: #217ce8;
   opacity: ${({ visible }) => (visible ? 1 : 0)};
   transform: scale(${({ visible }) => (visible ? 1 : 0)});
@@ -23,6 +25,9 @@ const portStyle = styled.div`
   background-color: white;
   position: absolute;
   border: 2px solid #cacaca;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 
   &:hover {
     background: #4ea9ff;
@@ -145,7 +150,17 @@ const Port = (port: purePort) => {
         }
       }}
     >
-      {port.id}
+      {import.meta.env.DEV && (
+        <span
+          style={{
+            position: "absolute",
+            color: "orangered",
+            fontWeight: "bold",
+          }}
+        >
+          {port.id}
+        </span>
+      )}
       <Indicator visible={isActive} />
     </StyledPort>
   );

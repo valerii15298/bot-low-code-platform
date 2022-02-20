@@ -9,7 +9,6 @@ import {
 import { setStateAction } from "../redux/actions";
 import { useAppDispatch } from "../redux/hooks";
 import { Close } from "../svg";
-import { sideWindow } from "../types";
 import {
   AddNewGroupButton,
   ButtonDeleteGroup,
@@ -22,6 +21,7 @@ import {
   GroupsDiv,
   GroupsSettingsH1,
 } from "./StyledComponents";
+import { sideWindow } from "../spacing";
 
 export const GroupsSettings = () => {
   // const originalGroups = useAppSelector((s) => s.groups);

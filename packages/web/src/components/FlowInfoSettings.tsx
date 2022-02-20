@@ -14,7 +14,6 @@ import {
   useLocalStorage,
 } from "../redux/hooks";
 import { Close } from "../svg";
-import { LocalStorageKey, sideWindow } from "../types";
 import {
   BackgroundImages,
   BackgroundSettingsDiv,
@@ -22,9 +21,9 @@ import {
   FlowInfoSettingsSection,
   SettingsLabel,
 } from "./StyledComponents";
+import { LocalStorageKey, sideWindow } from "../spacing";
 
 export const FlowInfoSettings = () => {
-  const flowInfo = useAppSelector((s) => s.flowInfo);
   const dispatch = useAppDispatch();
   const [backgroundImageUrls, setBackgroundImageUrls] = useState<string[]>([]);
 
@@ -42,8 +41,15 @@ export const FlowInfoSettings = () => {
     fetchImages().then();
   }, []);
 
+  // TODO get from apollo
+  const flowInfo = {
+    flow_name: "name",
+    flow_description: "desc",
+    run_times_max: 10,
+    user_run_limit_seconds: 10,
+  };
   const { flow_name, flow_description, run_times_max, user_run_limit_seconds } =
-    flowInfo || {};
+    flowInfo;
   const [backgroundOpacity, setBackgroundOpacity] = useLocalStorage(
     LocalStorageKey.backgroundOpacity,
     50
@@ -68,7 +74,8 @@ export const FlowInfoSettings = () => {
         {...props}
         value={value ?? "Loading ..."}
         onChange={(e) => {
-          dispatch(setStateAction({ flowInfo: { [key]: e.target.value } }));
+          // TODO apollo change flow info
+          // dispatch(setStateAction({ flowInfo: { [key]: e.target.value } }));
         }}
       />
     );

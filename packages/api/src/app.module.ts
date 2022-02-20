@@ -1,104 +1,43 @@
-import { Injectable, Module, Provider } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import {
-  Connection,
-  ConnectionCreateManyInput,
-  DeleteManyConnectionArgs,
   resolvers,
-  ConnectionCrudResolver,
-  ConnectionWhereInput,
+  ResolversEnhanceMap,
+  applyResolversEnhanceMap,
+  TemplateNode,
+  DeleteTemplateNodeArgs,
 } from '../prisma/generated/type-graphql';
 import { TypeGraphQLModule } from 'typegraphql-nestjs';
 import path from 'path';
 
-import {
-  Arg,
-  Args,
-  ArgsType,
-  Ctx,
-  Field,
-  InputType,
-  MiddlewareInterface,
-  Mutation,
-  NextFn,
-  ObjectType,
-  PubSub,
-  PubSubEngine,
-  Query,
-  Resolver,
-  ResolverData,
-  UseMiddleware,
-} from 'type-graphql';
+import { PubSubEngine, UseMiddleware } from 'type-graphql';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { PrismaClient } from '@prisma/client';
+import { LogAccess } from './type-graphql/middlewares/logAccess';
+import { CustomResolver } from './type-graphql/resolvers/custom.resolver';
+import { GraphQLResolveInfo } from 'graphql';
+import { DeleteFlowNodeResolver } from './type-graphql/resolvers/deleteFlowNode.resolver';
+import {
+  getPrismaFromContext,
+  transformCountFieldIntoSelectRelationsCount,
+  transformFields,
+} from '../prisma/generated/type-graphql/helpers';
+import graphqlFields from 'graphql-fields';
+import { DeleteTemplateNodeResolver } from './type-graphql/resolvers/deleteTemplateNode.resolver';
 // import { RedisPubSub } from 'graphql-redis-subscriptions';
 // import { PubSub as InMemoryPubSub } from 'graphql-subscriptions';
 // const pubSub = new InMemoryPubSub();
 
-interface Context {
+const resolversEnhanceMap: ResolversEnhanceMap = {
+  FlowNode: {},
+};
+
+applyResolversEnhanceMap(resolversEnhanceMap);
+
+export interface Context {
   prisma: PrismaClient;
 }
 
 const prisma = new PrismaClient();
-
-const emitSchemaFile = path.resolve(
-  __dirname,
-  '../../../web/src/graphql/schema.graphql',
-);
-
-@Injectable()
-export class LogAccess implements MiddlewareInterface {
-  constructor(@PubSub() private pubSub: PubSubEngine) {}
-
-  async use(ddd: ResolverData, next: NextFn): Promise<any> {
-    return next();
-  }
-}
-
-@InputType()
-class ConnectionsWhere {
-  @Field((type) => ConnectionWhereInput)
-  where: ConnectionWhereInput;
-}
-
-@ArgsType()
-class ProcessConnectionsArgs {
-  @Field((type) => [ConnectionCreateManyInput])
-  add: ConnectionCreateManyInput[];
-
-  @Field((type) => ConnectionsWhere)
-  remove: ConnectionsWhere;
-}
-
-@ObjectType()
-class ProcessedConnections {
-  @Field((type) => [Connection])
-  added: Connection[];
-
-  @Field((type) => [Connection])
-  removed: Connection[];
-}
-
-@Resolver(String)
-class CustomUserResolver {
-  @Query((returns) => String, { nullable: true })
-  @UseMiddleware(LogAccess)
-  async bestUser(@Ctx() { prisma }: Context, @PubSub() pubSub: PubSubEngine) {
-    // console.log({ pubSub });
-    return 'You are the best of the best!!:)))';
-  }
-
-  @Mutation((returns) => ProcessedConnections)
-  async processConnections(
-    @Args() { add, remove }: ProcessConnectionsArgs,
-    @Ctx() { prisma }: Context,
-  ): Promise<ProcessedConnections> {
-    prisma.connection.createMany({ data: add });
-    prisma.connection.deleteMany(remove);
-    return { added: [], removed: [] };
-  }
-}
-
-console.log(process.env.DATABASE_URL, process.env.WEB_BASE_APP_PATH);
 
 @Module({
   imports: [
@@ -110,9 +49,8 @@ console.log(process.env.DATABASE_URL, process.env.WEB_BASE_APP_PATH);
     TypeGraphQLModule.forRoot({
       playground: true,
       introspection: true,
-      // path: '/graphql',
-      emitSchemaFile,
-      validate: false,
+      // path: process.env.GRAPHQL_API_PATH,
+      validate: true,
       context: () => ({ prisma }),
       globalMiddlewares: [LogAccess],
       // pubSub,
@@ -121,10 +59,12 @@ console.log(process.env.DATABASE_URL, process.env.WEB_BASE_APP_PATH);
   controllers: [],
   providers: [
     // register all resolvers inside `providers` of the Nest module
-    ...(resolvers as unknown as Array<Provider<any>>),
-    CustomUserResolver,
+    ...(resolvers as any),
+    CustomResolver,
+    DeleteFlowNodeResolver, //overwrite
+    DeleteTemplateNodeResolver, //overwrite
     LogAccess,
-    PubSubEngine as any,
+    PubSubEngine,
   ],
 })
 export class AppModule {}

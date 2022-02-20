@@ -4,8 +4,10 @@ import { useMemo } from "react";
 import { selectActiveDrawflow } from "./drawflowSlice";
 import { useAppSelector } from "./hooks";
 import { RootState } from "./store";
-import { portType, pureNode, purePort } from "../types";
 import handler from "../models/tools";
+import { portType } from "../spacing";
+import { pureNode } from "../types/node.types";
+import { purePort } from "../types/port.types";
 
 export const createDeepEqualSelector = createSelectorCreator(
   defaultMemoize,

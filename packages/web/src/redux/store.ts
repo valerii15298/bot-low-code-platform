@@ -4,34 +4,50 @@ import { getDefaultFlowNode } from "../models/getDefaultFlowNode";
 import { getFlowInitialState } from "../models/getFlowInitialState";
 import handler from "../models/tools";
 import {
-  clientPos,
-  flowType,
-  node,
-  ObjectKeys,
-  portType,
-  Slices,
-} from "../types";
-import {
   addNewNode,
   canvasShapeUpdated,
   insertCopiedNode,
   setStateAction,
+  stateReplaceAll,
   toggleSidebar,
+  updateConnectionsIds,
 } from "./actions";
 import { fetchBotFlow } from "./api";
-import {
-  drawflowSlice,
-  getDefaultStateData,
-  selectActiveDrawflow,
-  setState,
-} from "./drawflowSlice";
+import { drawflowSlice, selectActiveDrawflow } from "./drawflowSlice";
+import { getDefaultStateData } from "../models/getDefaultStateData";
+import { setState } from "./setState";
+import { portType, Slices } from "../spacing";
+import { clientPos, ObjectKeys } from "../types/helpers";
+import { flowType } from "../types/reduxStoreState";
+import { node } from "../types/node.types";
+import { connections } from "../types/connection.types";
 
 const reducer = createReducer(getFlowInitialState(), (builder) => {
   builder
+    .addCase(updateConnectionsIds, (appState, { payload }) => {
+      const { mapClientIdToServerId } = payload;
+      const state = appState.flows[payload.flowVersion];
+      state.connections = Object.values(state.connections).reduce(
+        (prevConnections, nextConnection) => {
+          if (nextConnection.id in mapClientIdToServerId) {
+            const newId = mapClientIdToServerId[nextConnection.id];
+            return {
+              ...prevConnections,
+              [newId]: { ...nextConnection, id: newId },
+            };
+          }
+          return {
+            ...prevConnections,
+            [nextConnection.id]: nextConnection,
+          };
+        },
+        {} as connections
+      );
+    })
     .addCase(setStateAction, setState)
     .addCase(insertCopiedNode, (appState) => {
       const state = selectActiveDrawflow(appState);
-      if (state.nodeToCopyId === undefined) return;
+      if (state.nodeToCopyId === null) return;
       const { clientX, clientY } = state.clientCurrentMousePos as clientPos;
       const node = JSON.parse(
         JSON.stringify(state.drawflow[state.nodeToCopyId])
@@ -60,10 +76,6 @@ const reducer = createReducer(getFlowInitialState(), (builder) => {
       };
     })
 
-    .addCase(toggleSidebar, (state) => {
-      state.sidebarVisible = !(state.sidebarVisible ?? true);
-    })
-
     .addCase(
       addNewNode,
       (appState: flowType, { payload: { clientX, clientY, templateNode } }) => {
@@ -72,86 +84,6 @@ const reducer = createReducer(getFlowInitialState(), (builder) => {
         if (!appState.canvas) {
           throw new TypeError("Canvas shape is not available");
         }
-
-        // use template to get data for node
-        const node: node = {
-          ...templateNode,
-          visible: 0,
-          id: 0,
-          pos: {
-            x: 0,
-            y: 0,
-          },
-          isSub: false,
-          height: 0,
-          width: 0,
-        };
-
-        node.pos = handler.getPos(
-          clientX,
-          clientY,
-          state.config.zoom.value,
-          appState.canvas
-        );
-        state.mouseBlockDragPos = {
-          clientX,
-          clientY,
-        };
-        // TODO change for id from server
-        const getId = (obj: Record<number, any>) => {
-          const ids = ObjectKeys(obj);
-          return ids.length ? Math.max(...ids) + 1 : 1;
-        };
-
-        // add ports to node
-
-        const id = getId(state.drawflow);
-        state.drawflow[id] = {
-          ...node,
-          id,
-        };
-        state.select = {
-          type: "node",
-          selectId: id,
-        };
-        state.config.drag = true;
-
-        let pid = getId(state.ports);
-        state.ports[pid] = {
-          id: pid,
-          type: portType.in,
-          nodeId: id,
-          portId: 1,
-          pos: {
-            x: 0,
-            y: 0,
-          },
-        };
-
-        pid = getId(state.ports);
-        state.ports[pid] = {
-          id: pid,
-          type: portType.out,
-          nodeId: id,
-          portId: 1,
-          pos: {
-            x: 0,
-            y: 0,
-          },
-        };
-
-        pid = getId(state.ports);
-        state.ports[pid] = {
-          id: pid,
-          type: portType.out,
-          nodeId: id,
-          portId: 2,
-          pos: {
-            x: 0,
-            y: 0,
-          },
-        };
-        console.log(current(state.ports));
       }
     )
     .addCase(canvasShapeUpdated, (appState, { payload }) => {
@@ -215,6 +147,12 @@ const reducer = createReducer(getFlowInitialState(), (builder) => {
       }
       console.log({ newFlows });
       state.flows = newFlows;
+    })
+    .addCase(stateReplaceAll, (state, { payload }) => {
+      const strState = payload.reduce((acc, next) => {
+        return acc.replaceAll(next[0], next[1]);
+      }, JSON.stringify(state));
+      return JSON.parse(strState);
     })
 
     // reducer for drawflow

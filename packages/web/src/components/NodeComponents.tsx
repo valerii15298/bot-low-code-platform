@@ -4,8 +4,9 @@
 import { setStateAction } from "../redux/actions";
 import { useAppDispatch } from "../redux/hooks";
 import { ThreeDots } from "../svg";
-import { mainWindow, pureNode } from "../types";
 import { BlockDiv, TapMoreButton } from "./StyledComponents";
+import { mainWindow } from "../spacing";
+import { pureNode } from "../types/node.types";
 
 export const Block = (props: pureNode) => {
   // console.log(props);

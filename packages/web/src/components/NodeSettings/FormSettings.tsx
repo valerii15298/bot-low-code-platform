@@ -1,7 +1,7 @@
 import { FC } from "react";
 import { capitalize, mapKeyToDisplayName } from "../../models/tools";
-import { ObjectKeys } from "../../types";
 import { Details, ListSettingsDiv, StyledSummary } from "./StyledComponents";
+import { ObjectKeys } from "../../types/helpers";
 
 export const FormSettings = ({
   path,

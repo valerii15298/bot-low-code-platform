@@ -3,7 +3,7 @@ import {
   TemplateNode,
   TemplateNodeCreateInput,
 } from "../generated/apollo";
-import { RecursivePartial } from "../types";
+import { RecursivePartial } from "../types/helpers";
 
 type PartialBy<T, K extends keyof T> = Omit<T, K> &
   RecursivePartial<Pick<T, K>>;

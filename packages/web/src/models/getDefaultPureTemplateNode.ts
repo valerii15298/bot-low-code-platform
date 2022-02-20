@@ -1,5 +1,5 @@
-import { pureTemplateNode } from "../types";
 import { getDefaultNodeProps } from "./getDefaultNodeProps";
+import { pureTemplateNode } from "../types/node.types";
 
 export const getDefaultPureTemplateNode = (): pureTemplateNode => ({
   info: {

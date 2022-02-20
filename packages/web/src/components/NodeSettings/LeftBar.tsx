@@ -7,7 +7,6 @@ import {
 } from "../../generated/apollo";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { filterTypename } from "../../tools/helpers";
-import { ObjectKeys } from "../../types";
 import { ToggleSidebar } from "../Sidebar";
 import { FormSettings } from "./FormSettings";
 import { NodeJumpControls } from "./NodeJumpControls";
@@ -29,6 +28,7 @@ import {
   ToggleSidebarDiv,
 } from "./StyledComponents";
 import { formType } from "./TemplateNodeSettings";
+import { ObjectKeys } from "../../types/helpers";
 
 export const LeftBar = (props: {
   defaultValues: formType;
@@ -44,6 +44,10 @@ export const LeftBar = (props: {
     rightBarNeedsToRemount,
     remountRightBar,
   } = props;
+  const {
+    NodeProps: { id: nodePropsId },
+    info: { id: nodeInfoId },
+  } = defaultValues;
 
   const ref = useRef<HTMLFormElement>(null);
 
@@ -150,7 +154,10 @@ export const LeftBar = (props: {
   };
 
   const onDelete = () => {
-    deleteTemplateNode({ variables: { where: { id } } }).then(console.log);
+    console.log({ id, nodeInfoId, nodePropsId });
+    deleteTemplateNode({
+      variables: { where: { id, nodeInfoId, nodePropsId } },
+    }).then(console.log);
   };
 
   // console.log(defaultValues);

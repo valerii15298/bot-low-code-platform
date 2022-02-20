@@ -8,13 +8,45 @@ import {
 import { ReadFieldOptions } from "@apollo/client/cache";
 import { ReadFieldFunction } from "@apollo/client/cache/core/types/common";
 import { setNestedObjectField } from "../../models/GetNestedObjectField";
-import { isArray, RecursiveFunc, setFunc, wrapObj } from "../../types";
-import { cache, data } from "./index";
-import { objToGraphqlSelection } from "./objToGraphqlSelection";
+import { isArray, primitiveType, RecursivePartial } from "../../types/helpers";
+
+const objToGraphqlSelection = (obj: Record<string, any>) => {
+  let selection = "{ ";
+
+  for (const key in obj) {
+    selection += " " + key;
+    if (typeof obj[key] === "object" && obj[key] !== null) {
+      selection += " " + objToGraphqlSelection(obj[key]);
+    }
+  }
+  return selection + " }";
+};
 
 export const proxyTarget = Symbol("proxyTarget");
 
 const rootQueryKey = "key_" + Math.random().toString().replaceAll(".", "_");
+
+type optionsType = Omit<ReadFieldOptions, "fieldName" | "from">;
+
+type wrapGetFunc<T, Q extends boolean = true> = (
+  ...params: Q extends false ? [] : [optionsType?]
+) => T extends primitiveType
+  ? T
+  : T extends (infer U)[]
+  ? wrapObj<U, false>[]
+  : RecursiveFunc<T>;
+
+//Q - make options to function optional
+type wrapObj<T, Q extends boolean = true> = {
+  set: (
+    setFunc: (
+      currentField: wrapGetFunc<T, Q>
+    ) => T extends primitiveType ? T : RecursivePartial<T>
+  ) => void;
+} & wrapGetFunc<T, Q>;
+type RecursiveFunc<T extends Record<string, any>> = {
+  [P in keyof T]: wrapObj<T[P]>;
+};
 
 export const wrap = <T>(
   ctxOrCache: FieldFunctionOptions | InMemoryCache,

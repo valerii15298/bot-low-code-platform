@@ -1,9 +1,9 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { flowType } from "../../types";
 import { actions, selectActiveDrawflow } from "../drawflowSlice";
 import { store } from "../store";
 // @ts-ignore
 import AlignWorker from "../../web-workers/alignFlow?worker";
+import { flowType } from "../../types/reduxStoreState";
 
 const alignWorker = new AlignWorker();
 alignWorker.onmessage = (m: any) => {

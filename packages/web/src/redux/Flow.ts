@@ -1,14 +1,11 @@
 import lodash from "lodash";
 import { syncTimer } from "../decorators";
-import {
-  addConnectionType,
-  idConnType,
-  moveNodeType,
-  ObjectKeys,
-  Port,
-  stateData,
-} from "../types";
 import Node from "./Node";
+import { ObjectKeys } from "../types/helpers";
+import { stateData } from "../types/currentBotFlowVersion";
+import { moveNodeType } from "../types/node.types";
+import { Port } from "../types/port.types";
+import { addConnectionType, idConnType } from "../types/connection.types";
 
 export class Flow {
   // readonly because we are using only immer.js with redux-toolkit
@@ -258,7 +255,7 @@ export class Flow {
         });
       });
 
-    console.log(nearestPort);
+    // console.log(nearestPort);
     if (nearestPort) {
       this.state.portToConnect = nearestPort.port;
     } else {

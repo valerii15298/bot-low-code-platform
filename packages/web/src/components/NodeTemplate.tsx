@@ -3,7 +3,6 @@ import { setStateAction } from "../redux/actions";
 import { getFileUrl } from "../redux/api";
 import { useAppDispatch } from "../redux/hooks";
 import { ThreeDots } from "../svg";
-import { mainWindow } from "../types";
 import { eventEmitter } from "./Drawflow";
 import { formType } from "./NodeSettings/TemplateNodeSettings";
 import {
@@ -12,6 +11,7 @@ import {
   NodeTitleSpan,
   TapMoreButton,
 } from "./StyledComponents";
+import { mainWindow } from "../spacing";
 
 export const NodeTemplate = (props: formType) => {
   const { id, order } = props;

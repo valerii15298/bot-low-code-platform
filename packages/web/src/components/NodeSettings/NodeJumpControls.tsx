@@ -7,7 +7,6 @@ import { Flow } from "../../redux/Flow";
 import { useAppSelector } from "../../redux/hooks";
 import Node from "../../redux/Node";
 import { store } from "../../redux/store";
-import { mainWindow } from "../../types";
 import {
   JumpButton,
   ListChooserDiv,
@@ -17,6 +16,7 @@ import {
   SelectNodeSettingsItem,
   StyledSummary,
 } from "./StyledComponents";
+import { mainWindow } from "../../spacing";
 
 const jumpToNodeSettings = (id: number) => {
   store.dispatch(

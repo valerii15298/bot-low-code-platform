@@ -4,8 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "web:ts-watch": "tsc -p .\\packages\\web\\ --noEmit --watch",
     "start:prod": "pnpm -r build && pnpm -r prod",
     "startTest": "echo 2",
+    "start:dev": "dotenv.CMD -e .\\.env -e .\\.env.development -- pnpm -r dev --stream=true",
     "docker:clean": "docker rmi $(docker images -f \"dangling=true\" -q)"
   },
   "dependencies": {

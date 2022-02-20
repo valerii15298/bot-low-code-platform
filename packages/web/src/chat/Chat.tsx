@@ -11,7 +11,6 @@ import {
 import { selectActiveDrawflow } from "../redux/drawflowSlice";
 import { Flow } from "../redux/Flow";
 import { useAppSelector } from "../redux/hooks";
-import { ObjectKeys, RecursivePartial, stateData } from "../types";
 import {
   chatState,
   getDefaultBotNodeData,
@@ -21,6 +20,8 @@ import {
 } from "./chat-types";
 import { ChatApp } from "./ChatApp";
 import { chatNodeType } from "./chatNodes/chatNodeType";
+import { ObjectKeys, RecursivePartial } from "../types/helpers";
+import { stateData } from "../types/currentBotFlowVersion";
 
 const getInitialChatState = (): chatState => ({
   id: 0,

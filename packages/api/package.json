@@ -6,6 +6,7 @@
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
+    "schema:emit": "ts-node .\\scripts\\generateSchemaSDL.ts",
     "dev": "pnpm start:dev",
     "prod": "pnpm start:prod",
     "prebuild": "rimraf dist",

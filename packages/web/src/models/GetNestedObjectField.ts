@@ -59,5 +59,3 @@ export const setNestedObjectField = (
   obj[lastProp] = value;
   return result;
 };
-
-let y: any;

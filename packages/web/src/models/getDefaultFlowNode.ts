@@ -1,5 +1,5 @@
-import { node } from "../types";
 import { getDefaultPureTemplateNode } from "./getDefaultPureTemplateNode";
+import { node } from "../types/node.types";
 
 export const getDefaultFlowNode = (): node => ({
   ...getDefaultPureTemplateNode(),

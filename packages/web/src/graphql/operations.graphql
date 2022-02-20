@@ -1,90 +1,90 @@
 fragment nodeInfo on NodeInfo {
-  id
-  name
-  description
-  iconLink
+    id
+    name
+    description
+    iconLink
 }
 
 fragment NodeSwitchProps on NodeSwitchProps {
-  SwitchDisplayType
+    SwitchDisplayType
 }
 
 fragment NodeFileProps on NodeFileProps {
-  info
-  url
+    info
+    url
 }
 
 fragment NodeSwitchOptionProps on NodeSwitchOptionProps {
-  imageLink
-  text
+    imageLink
+    text
 }
 
 fragment NodeLinkProps on NodeLinkProps {
-  src
-  text
+    src
+    text
 }
 
 fragment NodeAudioProps on NodeAudioProps {
-  src
+    src
 }
 
 fragment NodeImageProps on NodeImageProps {
-  src
+    src
 }
 
 fragment NodeTextProps on NodeTextProps {
-  src
+    src
 }
 
 fragment NodeVideoProps on NodeVideoProps {
-  src
+    src
 }
 
 fragment NodeWaitProps on NodeWaitProps {
-  src
-  delay
+    src
+    delay
 }
 
 fragment NodeCountdownProps on NodeCountdownProps {
-  duration
+    duration
 }
 
 fragment nodeProps on NodeProps {
-  id
-  type
-  NodeFileProps {
-    ...NodeFileProps
-  }
-  NodeLinkProps {
-    ...NodeLinkProps
-  }
-  NodeSwitchOptionProps {
-    ...NodeSwitchOptionProps
-  }
-  NodeImageProps {
-    ...NodeImageProps
-  }
-  NodeAudioProps {
-    ...NodeAudioProps
-  }
-  NodeCountdownProps {
-    ...NodeCountdownProps
-  }
+    id
+    type
+    NodeFileProps {
+        ...NodeFileProps
+    }
+    NodeLinkProps {
+        ...NodeLinkProps
+    }
+    NodeSwitchOptionProps {
+        ...NodeSwitchOptionProps
+    }
+    NodeImageProps {
+        ...NodeImageProps
+    }
+    NodeAudioProps {
+        ...NodeAudioProps
+    }
+    NodeCountdownProps {
+        ...NodeCountdownProps
+    }
 
-  NodeSwitchProps {
-    ...NodeSwitchProps
-  }
+    NodeSwitchProps {
+        ...NodeSwitchProps
+    }
 
-  NodeVideoProps {
-    ...NodeVideoProps
-  }
+    NodeVideoProps {
+        ...NodeVideoProps
+    }
 
-  NodeTextProps {
-    ...NodeTextProps
-  }
-  NodeWaitProps {
-    ...NodeWaitProps
-  }
+    NodeTextProps {
+        ...NodeTextProps
+    }
+    NodeWaitProps {
+        ...NodeWaitProps
+    }
 }
 
 #fragment NodeProps on NodeProps {
@@ -94,293 +94,207 @@ fragment nodeProps on NodeProps {
 #}
 
 fragment templateNode on TemplateNode {
-  id
-  order
-  group {
     id
-  }
-  info {
-    ...nodeInfo
-  }
+    order
+    group {
+        id
+    }
+    info {
+        ...nodeInfo
+    }
 
-  NodeProps {
-    type
-    ...nodeProps
-  }
+    NodeProps {
+        type
+        ...nodeProps
+    }
 }
 
 query templateNodes(
-  $cursor: TemplateNodeWhereUniqueInput
-  $distinct: [TemplateNodeScalarFieldEnum!]
-  $orderBy: [TemplateNodeOrderByWithRelationInput!]
-  $skip: Int
-  $take: Int
-  $where: TemplateNodeWhereInput
+    $cursor: TemplateNodeWhereUniqueInput
+    $distinct: [TemplateNodeScalarFieldEnum!]
+    $orderBy: [TemplateNodeOrderByWithRelationInput!]
+    $skip: Int
+    $take: Int
+    $where: TemplateNodeWhereInput
 ) {
-  templateNodes(
-    cursor: $cursor
-    where: $where
-    take: $take
-    skip: $skip
-    orderBy: $orderBy
-    distinct: $distinct
-  ) {
-    ...templateNode
-  }
+    templateNodes(
+        cursor: $cursor
+        where: $where
+        take: $take
+        skip: $skip
+        orderBy: $orderBy
+        distinct: $distinct
+    ) {
+        ...templateNode
+    }
 }
 #}
 
 mutation templateNodesMutation($input: TemplateNodeCreateInput!) {
-  createTemplateNode(data: $input) {
-    id
-  }
+    createTemplateNode(data: $input) {
+        id
+    }
 }
 
 mutation templateNodesUpdate(
-  $data: TemplateNodeUpdateInput!
-  $where: TemplateNodeWhereUniqueInput!
+    $data: TemplateNodeUpdateInput!
+    $where: TemplateNodeWhereUniqueInput!
 ) {
-  updateTemplateNode(data: $data, where: $where) {
-    id
-  }
+    updateTemplateNode(data: $data, where: $where) {
+        id
+    }
 }
 
 mutation templateNodesDelete($where: TemplateNodeWhereUniqueInput!) {
-  deleteTemplateNode(where: $where) {
-    id
-  }
+    deleteTemplateNode(where: $where) {
+        id
+    }
 }
 
 # TemplateNodes groups
 
 query templateNodesGroups(
-  $cursor: TemplateNodesGroupWhereUniqueInput
-  $distinct: [TemplateNodesGroupScalarFieldEnum!]
-  $orderBy: [TemplateNodesGroupOrderByWithRelationInput!]
-  $skip: Int
-  $take: Int
-  $where: TemplateNodesGroupWhereInput
+    $cursor: TemplateNodesGroupWhereUniqueInput
+    $distinct: [TemplateNodesGroupScalarFieldEnum!]
+    $orderBy: [TemplateNodesGroupOrderByWithRelationInput!]
+    $skip: Int
+    $take: Int
+    $where: TemplateNodesGroupWhereInput
 ) {
-  templateNodesGroups(
-    cursor: $cursor
-    distinct: $distinct
-    orderBy: $orderBy
-    skip: $skip
-    where: $where
-    take: $take
-  ) {
-    id
-    name
-    description
-  }
+    templateNodesGroups(
+        cursor: $cursor
+        distinct: $distinct
+        orderBy: $orderBy
+        skip: $skip
+        where: $where
+        take: $take
+    ) {
+        id
+        name
+        description
+    }
 }
 
 mutation templateNodesGroupsMutation($data: TemplateNodesGroupCreateInput!) {
-  createTemplateNodesGroup(data: $data) {
-    id
-  }
+    createTemplateNodesGroup(data: $data) {
+        id
+    }
 }
 
 mutation templateNodesGroupsUpdate(
-  $data: TemplateNodesGroupUpdateInput!
-  $where: TemplateNodesGroupWhereUniqueInput!
+    $data: TemplateNodesGroupUpdateInput!
+    $where: TemplateNodesGroupWhereUniqueInput!
 ) {
-  updateTemplateNodesGroup(data: $data, where: $where) {
-    id
-  }
+    updateTemplateNodesGroup(data: $data, where: $where) {
+        id
+    }
 }
 
 mutation templateNodesGroupsDelete(
-  $where: TemplateNodesGroupWhereUniqueInput!
+    $where: TemplateNodesGroupWhereUniqueInput!
 ) {
-  deleteTemplateNodesGroup(where: $where) {
-    id
-  }
+    deleteTemplateNodesGroup(where: $where) {
+        id
+    }
 }
-
-directive @client on FIELD
-directive @export(as: String) on FIELD
 
 fragment connectionsList on BotFlowVersion {
-  connections {
-    id
-    #    curvature @client
-    #    visible @client
-    #    selected @client
-    fromPort {
-      id
+    connections {
+        id
+        #    curvature @client
+        #    visible @client
+        #    selected @client
+        fromPort {
+            id
+        }
+        toPort {
+            id
+        }
     }
-    toPort {
-      id
-    }
-  }
-}
-
-fragment flowNodeClientData on FlowNode {
-  isSub @client
-  parentConnection @client {
-    id
-  }
-  parent @client {
-    id
-  }
-  allSuccessors @client {
-    id
-  }
-  outConnections @client {
-    id
-  }
-  prevDirectNodes @client {
-    id
-  }
-  subnodesWidth @client
-  complexParentNode @client {
-    id
-  }
-  rightWidth @client
-  leftWidth @client
-  totalWidth @client
-  childrenTotalWidth @client
-  firstSubnode @client {
-    id
-  }
-  subnodes @client {
-    id
-  }
-
-  out1 @client {
-    id
-  }
-
-  selected @client
-  pos @client {
-    x
-    y
-  }
-  height @client
-  width @client
-  positionNumber @client
 }
 
 fragment flowNode on FlowNode {
-  id
-  NodeProps {
-    ...nodeProps
-  }
-  info {
-    ...nodeInfo
-  }
-  ports {
     id
-    index
-  }
+    NodeProps {
+        ...nodeProps
+    }
+    info {
+        ...nodeInfo
+    }
+    ports {
+        id
+        index
+    }
 }
 
 fragment nodesList on BotFlowVersion {
-  nodes {
-    ...flowNode
-  }
+    nodes {
+        ...flowNode
+    }
 }
 
-fragment botFlowVersionClientData on BotFlowVersion {
-  heads @client {
-    id
-  }
-  canvasTranslate @client {
-    y
-    x
-  }
-  zoom @client {
-    max
-    min
-    tick
-    value
-  }
-}
+
 
 query botFlow($where: BotFlowWhereUniqueInput!) {
-  botFlow(where: $where) {
-    id
-    name
-    description
-    #    version @client
-    versions {
-      id
-      version
-      ...nodesList
-      ...connectionsList
+    botFlow(where: $where) {
+        id
+        name
+        description
+        #    version @client
+        versions {
+            id
+            version
+            ...nodesList
+            ...connectionsList
+        }
     }
-  }
 }
 
-query rootInfo {
-  dragTemplate @client
-  canvas @client {
-    x
-    y
-    width
-  }
-  precanvas @client {
-    width
-  }
-  sidebarVisible @client
-  windowConfig @client {
-    id
-    mainId
-    sideId
-  }
-  drag @client
-  canvasDrag @client
-  botFlowId @client
-  newPathDirection @client {
-    clientX
-    clientY
-  }
-  mouseBlockDragPos @client {
-    clientX
-    clientY
-  }
-  clientCurrentMousePos @client {
-    clientX
-    clientY
-  }
-  nodeToCopy @client {
-    id
-  }
-  portToConnect @client {
-    id
-  }
-}
 
 mutation deleteConnection($where: ConnectionWhereUniqueInput!) {
-  deleteConnection(where: $where) {
-    id
-  }
+    deleteConnection(where: $where) {
+        id
+    }
 }
 
 mutation createConnection($data: ConnectionCreateInput!) {
-  createConnection(data: $data) {
-    id
-  }
+    createConnection(data: $data) {
+        id
+    }
 }
 
 mutation createFlowNode($data: FlowNodeCreateInput!) {
-  createFlowNode(data: $data) {
-    id
-  }
+    createFlowNode(data: $data) {
+        id
+    }
 }
 
 mutation deleteFlowNode($where: FlowNodeWhereUniqueInput!) {
-  deleteFlowNode(where: $where) {
-    id
-  }
+    deleteFlowNode(where: $where) {
+        id
+    }
 }
 
 mutation updateFlowNode(
-  $where: FlowNodeWhereUniqueInput!
-  $data: FlowNodeUpdateInput!
+    $where: FlowNodeWhereUniqueInput!
+    $data: FlowNodeUpdateInput!
 ) {
-  updateFlowNode(where: $where, data: $data) {
-    id
-  }
+    updateFlowNode(where: $where, data: $data) {
+        id
+    }
+}
+
+mutation processConnections($add: [ConnectionCreateManyInput!]!, $remove: ConnectionsWhere!) {
+    processConnections(add: $add, remove: $remove) {
+        added {
+            id
+            clientId
+        }
+    }
+}
+
+mutation commitBotFlowVersion($botFlowId: Float!, $connections: [ConnectionCreateManyInput!]!, $nodes: [FlowNodeCreateInput!]!) {
+    commitFlowVersion(connections: $connections, nodes: $nodes, botFlowId: $botFlowId) {
+        botFlowId
+    }
 }

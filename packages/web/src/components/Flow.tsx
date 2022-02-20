@@ -6,7 +6,6 @@ import styled from "styled-components";
 import { Chat } from "../chat/Chat";
 import { fetchBotFlow } from "../redux/api";
 import { useAppDispatch, useAppSelector } from "../redux/hooks";
-import { mainWindow, sideWindow } from "../types";
 import { CodeEditor } from "./CodeEditor";
 import { Drawflow } from "./Drawflow";
 import { FlowInfoSettings } from "./FlowInfoSettings";
@@ -16,6 +15,7 @@ import { NodeSettings } from "./NodeSettings/NodeSettings";
 import { TemplateNodeSettings } from "./NodeSettings/TemplateNodeSettings";
 import { Sidebar, ToggleSidebar } from "./Sidebar";
 import { FlowDiv, Main, MainDiv } from "./StyledComponents";
+import { mainWindow, sideWindow } from "../spacing";
 
 const AppCodeEditor = () => {
   const json = useAppSelector((s) => s);

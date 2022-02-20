@@ -18,6 +18,8 @@
     "@emotion/styled": "^11.6.0",
     "@fontsource/roboto": "^4.5.3",
     "@graphql-codegen/typescript-apollo-client-helpers": "^2.1.10",
+    "@material-ui/core": "^4.12.3",
+    "@mui/base": "^5.0.0-alpha.69",
     "@mui/icons-material": "^5.4.1",
     "@mui/material": "^5.4.1",
     "@rtk-query/graphql-request-base-query": "^1.0.3",

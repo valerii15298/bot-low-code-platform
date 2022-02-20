@@ -1,15 +1,11 @@
 import lodash from "lodash";
 import { memoize } from "../decorators";
-import {
-  canvasShape,
-  connection,
-  node,
-  portType,
-  pos,
-  stateData,
-  updateNode,
-} from "../types";
 import { Flow } from "./Flow";
+import { portType } from "../spacing";
+import { stateData } from "../types/currentBotFlowVersion";
+import { node, updateNode } from "../types/node.types";
+import { canvasShape, pos } from "../types/helpers";
+import { connection } from "../types/connection.types";
 
 export default class Node {
   public readonly id: number;

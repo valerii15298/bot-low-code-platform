@@ -11,6 +11,8 @@
       <excludeFolder url="file://$MODULE_DIR$/packages/web/dist" />
       <excludeFolder url="file://$MODULE_DIR$/packages/my-nextjs-app" />
       <excludeFolder url="file://$MODULE_DIR$/node_modules" />
+      <excludeFolder url="file://$MODULE_DIR$/node_modules/.prisma" />
+      <excludeFolder url="file://$MODULE_DIR$/packages/api/node_modules/@prisma" />
     </content>
     <content url="file://$MODULE_DIR$/node_modules" />
     <content url="file://$MODULE_DIR$/node_modules/.prisma" />

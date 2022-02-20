@@ -1,9 +1,9 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { flowType } from "../../types";
 // @ts-ignore
 import TogglePortWorker from "../../web-workers/toggleAvailablePortToConnect?worker";
 import { actions, selectActiveDrawflow } from "../drawflowSlice";
 import { store } from "../store";
+import { flowType } from "../../types/reduxStoreState";
 
 const togglePortWorker = new TogglePortWorker();
 togglePortWorker.onmessage = (m: any) => {

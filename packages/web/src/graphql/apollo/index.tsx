@@ -1,64 +1,16 @@
-import {
-  ApolloClient,
-  ApolloProvider,
-  InMemoryCache,
-  Reference,
-} from "@apollo/client";
+import { ApolloClient, ApolloProvider, InMemoryCache } from "@apollo/client";
 import { FC } from "react";
-import {
-  BotFlow,
-  Connection,
-  MainWindow,
-  Query,
-  SideWindow,
-} from "../../generated/apollo";
-import { botFlowIdParam } from "./useData";
 import introspectionQueryResultData from "../fragmentTypes";
 import { typeDefs } from "../local-schema";
-import { TestApp } from "./testApp";
-import { typePolicies } from "./typePolicies";
-import { wrap } from "./wrap";
 import React from "react";
 
 export const cache = new InMemoryCache({
   possibleTypes: introspectionQueryResultData.possibleTypes,
-  typePolicies,
 });
-
-export const wrapById = <T,>(id: string | Reference) => wrap<T>(cache, id);
-
-export const rootQuery = wrapById<Query>("ROOT_QUERY");
-export const currentBotFlow = wrapById<BotFlow>(`BotFlow:${botFlowIdParam}`);
-
-// rootQuery.set(() => ({
-//   dragTemplate: null,
-//   canvasDrag: false,
-//
-//   botFlowId: 1,
-//   sidebarVisible: false,
-//   windowConfig: {
-//     id: 0,
-//     mainId: MainWindow.MainFlow,
-//     sideId: SideWindow.None,
-//   },
-//   drag: false,
-//   canvas: null,
-//   precanvas: null,
-//   newPathDirection: null,
-//   mouseBlockDragPos: null,
-//   clientCurrentMousePos: null,
-//   nodeToCopy: null,
-//   portToConnect: null,
-// }));
-
-// cache.readField
-//@ts-ignore
-export const { data } = cache;
 
 export const graphqlUri = import.meta.env.PROD
   ? import.meta.env.VITE_GRAPHQL_API_PATH
   : "http://localhost:3000/graphql";
-console.log({ graphqlUri });
 
 export const apolloClient = new ApolloClient({
   uri: graphqlUri,
@@ -67,10 +19,5 @@ export const apolloClient = new ApolloClient({
 });
 
 export default (({ children }) => {
-  return (
-    <ApolloProvider client={apolloClient}>
-      {children}
-      <TestApp />
-    </ApolloProvider>
-  );
+  return <ApolloProvider client={apolloClient}>{children}</ApolloProvider>;
 }) as FC;
