@@ -1,20 +1,22 @@
-// @ts-ignore
 import { Flow } from "../redux/Flow";
 import { stateData } from "../types/currentBotFlowVersion";
+import { idBotFlowVersionType } from "../types/botFlow.types";
 
 let running = false;
 
-onmessage = ({ data: { 0: state, 1: version } }) => {
+onmessage = ({
+  data: [state, version],
+}: {
+  data: [stateData, idBotFlowVersionType];
+}) => {
   if (running) {
     return;
   }
   running = true;
   if (state.config.drag && state.select) {
-    const s = state as stateData;
     const flow = new Flow(state);
-    flow.toggleAvailablePortToConnect(s.select!.selectId);
+    flow.toggleAvailablePortToConnect(state.select.selectId);
     const { portToConnect } = flow.state;
-    // @ts-ignore
     postMessage({
       portToConnect,
       version,

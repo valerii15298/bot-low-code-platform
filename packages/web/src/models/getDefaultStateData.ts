@@ -4,7 +4,7 @@ export const getDefaultStateData = (): stateData => ({
   clientCurrentMousePos: null,
   mouseBlockDragPos: null,
   nodeToCopyId: null,
-  undoRedoActions: [],
+  undoRedo: { actions: [], currentIndex: -1 },
   isDraft: false,
   live: false,
   canvasDrag: false,

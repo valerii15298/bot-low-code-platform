@@ -1,15 +1,23 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-// @ts-ignore
 import TogglePortWorker from "../../web-workers/toggleAvailablePortToConnect?worker";
 import { actions, selectActiveDrawflow } from "../drawflowSlice";
 import { store } from "../store";
 import { flowType } from "../../types/reduxStoreState";
+import { idBotFlowVersionType } from "../../types/botFlow.types";
+import { Port } from "../../types/port.types";
 
 const togglePortWorker = new TogglePortWorker();
-togglePortWorker.onmessage = (m: any) => {
+togglePortWorker.onmessage = ({
+  data,
+}: {
+  data: {
+    portToConnect: Port;
+    version: idBotFlowVersionType;
+  };
+}) => {
   const { version } = store.getState();
-  if (version === m.data.version) {
-    store.dispatch(actions.setState({ portToConnect: m.data.portToConnect }));
+  if (version === data.version) {
+    store.dispatch(actions.setState({ portToConnect: data.portToConnect }));
   }
 };
 

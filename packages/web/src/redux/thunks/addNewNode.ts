@@ -13,8 +13,9 @@ import { node, pureTemplateNode } from "../../types/node.types";
 import { getId } from "../getId";
 import handler, { exclude } from "../../models/tools";
 import { portType } from "../../spacing";
-import { sdk, undoThunk } from "../api";
+import { sdk } from "../api";
 import { getDefaultFlowNode } from "../../models/getDefaultFlowNode";
+import { undoThunk } from "./undoThunk";
 
 export const addNewNodeThunk = createAsyncThunk(
   "addNewNodeThunk",

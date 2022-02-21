@@ -1,68 +1,13 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { GraphQLClient } from "graphql-request";
 import { getSdk } from "../generated/graphql-request";
-import {
-  actions,
-  canvasMouseUp,
-  processEntities,
-  selectActiveDrawflow,
-} from "./drawflowSlice";
-import { Flow } from "./Flow";
 import { graphqlUri } from "../graphql/apollo";
-import { setStateAction, updateConnectionsIds } from "./actions";
-import { getId } from "./getId";
-import { copyStateData } from "./copyStateData";
-import { portType } from "../spacing";
-import { stateData } from "../types/currentBotFlowVersion";
-import { flowType } from "../types/reduxStoreState";
-import { idFlowNodeType, node } from "../types/node.types";
-import { idPortType, Port } from "../types/port.types";
-import { connection, idConnType } from "../types/connection.types";
-import { exclude } from "../models/tools";
 
 const urlParams = new URLSearchParams(window.location.search);
 export const botFlowId = Number(urlParams.get("botFlowId"));
 
-// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-const client = new GraphQLClient(graphqlUri!);
+const client = new GraphQLClient(graphqlUri);
 export const sdk = getSdk(client);
-
-export const fetchBotFlow = createAsyncThunk("fetchBotFlow", async () => {
-  const data = await sdk.botFlow({ where: { id: botFlowId } });
-  const arr = data.botFlow?.versions.map((ver) => {
-    const ports: Record<idPortType, Omit<Port, "pos">> = {};
-    const drawflow = ver.nodes.reduce((acc, v) => {
-      acc[v.id] = v;
-      v.ports.forEach(
-        ({ id, index }) =>
-          (ports[id] = {
-            id,
-            type: index === 1 ? portType.in : portType.out,
-            nodeId: v.id,
-            portId: index - Number(index !== 1),
-          })
-      );
-      return acc;
-    }, {} as Record<idFlowNodeType, Pick<node, "id" | "NodeProps" | "info">>);
-    const connections = ver.connections.reduce((acc, v) => {
-      acc[v.id] = {
-        ...v,
-      };
-      return acc;
-    }, {} as Record<idConnType, Omit<connection, "visible">>);
-    return [
-      ver.id,
-      {
-        drawflow,
-        ports,
-        connections,
-      },
-    ] as const;
-  });
-  if (!arr) return;
-  // console.log({ arr });
-  return Object.fromEntries(arr);
-});
 
 export const corsUrl =
   import.meta.env.VITE_CORS_PATH ?? "http://localhost:8080/";
@@ -73,8 +18,7 @@ const apiUrl =
 const baseUrl = corsUrl + apiUrl;
 
 export const getFileUrl = async (file: File) => {
-  /*Upload file to server
-   * */
+  // Upload file to server
   const formData = new FormData();
   formData.append("profile_picture", file);
   const response = await fetch(
@@ -160,52 +104,6 @@ export const postFlow = createAsyncThunk("postFlow", () => {
   console.log("postFlow");
 });
 
-export const commitFlowVersionThunk = createAsyncThunk(
-  "commitFlowVersionThunk",
-  (_, { getState }) => {
-    console.log("commitFlowVersion");
-    const appState = getState() as flowType;
-    const { connections, ports, drawflow } = selectActiveDrawflow(appState);
-    sdk
-      .commitBotFlowVersion({
-        botFlowId,
-        connections: Object.values(connections).map((conn) => ({
-          id: conn.id,
-          botFlowVersionId: appState.version,
-          from: conn.fromPort.id,
-          to: conn.toPort.id,
-        })),
-        nodes: Object.values(drawflow).map(({ info, NodeProps, id }) => {
-          const { type } = NodeProps;
-          const propsKey = `Node${type}Props` as const;
-          const props = NodeProps[propsKey];
-          return {
-            flow: { connect: { id: appState.version + 1 } },
-            info: { create: exclude(info, "id") },
-            NodeProps: {
-              create: {
-                type: NodeProps.type,
-                [propsKey]: { create: props },
-              },
-            },
-            ports: {
-              createMany: {
-                data: Object.values(ports)
-                  .filter((port) => port.nodeId === id)
-                  .map((port) => ({
-                    id: port.id,
-                    index: port.portId + Number(port.type === portType.out),
-                  })),
-              },
-            },
-          };
-        }),
-      })
-      .then(() => alert("Commited successfully"))
-      .catch((err) => console.log({ err }));
-  }
-);
-
 export const addConnection = createAsyncThunk("addConnection", (ss) => {
   console.log("addConnection");
 });
@@ -225,131 +123,3 @@ export const removeFlowNode = createAsyncThunk("removeFlowNode", () => {
 export const updateFlowNode = createAsyncThunk("updateFlowNode", () => {
   console.log("updateFlowNode");
 });
-
-export const undoThunk = createAsyncThunk(
-  "undoThunk",
-  (_, { getState, dispatch }) => {
-    const state = selectActiveDrawflow(getState() as flowType);
-    const lastAction = state.undoRedoActions.at(-1);
-    if (lastAction) {
-      dispatch(
-        actions[lastAction.type]({
-          data: lastAction.undo,
-          pushToUndoRedo: false,
-        })
-      );
-    }
-  }
-);
-
-// export const processConnectionsServer = createAsyncThunk(
-//   "processConnectionsServer",
-//   (connections: processConnections) => {
-//
-//   }
-// );
-
-export const canvasMouseUpThunk = createAsyncThunk(
-  "canvasMouseUpThunk",
-  async (_, { dispatch, getState }) => {
-    const appState = getState() as flowType;
-    dispatch(actions.canvasMouseUp());
-    const state = selectActiveDrawflow(appState);
-    const flow = new Flow(state);
-    if (state.portToConnect && state.select?.selectId) {
-      const { id } = state.portToConnect;
-      const endId = state.select.selectId;
-      const conns = flow.addConnection({
-        visible: 0,
-        fromPort: {
-          id,
-        },
-        toPort: {
-          id: flow.getNode(endId).inPort.id,
-        },
-      });
-      const addWithIds: connection[] = conns.add.map((conn) => ({
-        ...conn,
-        id: getId(),
-        visible: 0,
-      }));
-      const connsWithIds = {
-        ...conns,
-        add: addWithIds,
-      };
-      if (state.isDraft || state.live) {
-        dispatch(
-          actions.processEntities({
-            data: { connections: connsWithIds },
-            pushToUndoRedo: true,
-          })
-        );
-      }
-      if (state.live) {
-        console.log("Is live");
-        sdk
-          .processConnections({
-            add: addWithIds.map(({ fromPort, toPort, id }) => ({
-              id, // here use id only as client id,
-              // actual ids will be generated on serer side
-              from: fromPort.id,
-              to: toPort.id,
-              botFlowVersionId: appState.version,
-            })),
-            remove: { where: { id: { in: conns.remove } } },
-          })
-          .then((data) => {
-            const { added } = data.processConnections;
-            const mapClientIdToServerId = added.reduce((prev, next) => {
-              return { ...prev, [next.clientId]: next.id };
-            }, {} as Record<number, number>);
-            dispatch(
-              updateConnectionsIds({
-                mapClientIdToServerId,
-                flowVersion: appState.version,
-              })
-            );
-          })
-          .catch((err) => {
-            console.trace(err);
-            console.log(
-              "Changes are not saved to the server, continue changes locally"
-            );
-            dispatch(undoThunk());
-          });
-      } else {
-        console.log("not draft and not live");
-        // if state is locked(e. g. already commited)
-        // need create new draft
-        // console.log({ connsWithIds });
-        const copiedOldState = JSON.parse(JSON.stringify(state)) as stateData;
-        // console.log({ copiedOldState });
-        processEntities(copiedOldState, {
-          payload: { data: { connections: connsWithIds } },
-          type: "processConnections",
-        });
-        canvasMouseUp(copiedOldState);
-        const copiedNewState = copyStateData(copiedOldState);
-        const newFlowVersionId = getId();
-        // console.log({ newFlowVersionId });
-        dispatch(
-          setStateAction({
-            version: newFlowVersionId,
-            flows: { [newFlowVersionId]: { ...copiedNewState, isDraft: true } },
-          })
-        );
-      }
-      /* check if in live mode mode
-       if in live mode then:
-       process conns:
-       delete conns, add generated ids to new ones,
-      insert into state new ones,
-       send to server as transactions,
-       if fail on server then:
-          show error,
-          keep local, stop merging,
-          push into queue to process as transaction
-          and push to server later when will be online*/
-    }
-  }
-);

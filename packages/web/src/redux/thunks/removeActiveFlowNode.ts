@@ -7,11 +7,12 @@ import {
 } from "../drawflowSlice";
 import { flowType } from "../../types/reduxStoreState";
 import { Flow } from "../Flow";
-import { sdk, undoThunk } from "../api";
+import { sdk } from "../api";
 import { stateData } from "../../types/currentBotFlowVersion";
 import { copyStateData } from "../copyStateData";
 import { getId } from "../getId";
 import { setStateAction } from "../actions";
+import { undoThunk } from "./undoThunk";
 
 export const removeActiveFlowNodeThunk = createAsyncThunk(
   "removeActiveFlowNodeThunk",

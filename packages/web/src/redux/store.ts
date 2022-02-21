@@ -12,7 +12,6 @@ import {
   toggleSidebar,
   updateConnectionsIds,
 } from "./actions";
-import { fetchBotFlow } from "./api";
 import { drawflowSlice, selectActiveDrawflow } from "./drawflowSlice";
 import { getDefaultStateData } from "../models/getDefaultStateData";
 import { setState } from "./setState";
@@ -21,12 +20,16 @@ import { clientPos, ObjectKeys } from "../types/helpers";
 import { flowType } from "../types/reduxStoreState";
 import { node } from "../types/node.types";
 import { connections } from "../types/connection.types";
+import { fetchBotFlowThunk } from "./thunks/fetchBotFlow";
 
 const reducer = createReducer(getFlowInitialState(), (builder) => {
   builder
     .addCase(updateConnectionsIds, (appState, { payload }) => {
       const { mapClientIdToServerId } = payload;
       const state = appState.flows[payload.flowVersion];
+      if (!state) {
+        throw new TypeError("version doe not exist anymore!");
+      }
       state.connections = Object.values(state.connections).reduce(
         (prevConnections, nextConnection) => {
           if (nextConnection.id in mapClientIdToServerId) {
@@ -90,7 +93,9 @@ const reducer = createReducer(getFlowInitialState(), (builder) => {
       appState.canvas = payload;
     })
 
-    .addCase(fetchBotFlow.fulfilled, (state, { payload }) => {
+    .addCase(fetchBotFlowThunk.fulfilled, (state, { payload }) => {
+      // kepps separete flows, but completely modifies other data
+      // such as ports, connections, drawflow
       if (!payload) return;
 
       const { flows } = state;

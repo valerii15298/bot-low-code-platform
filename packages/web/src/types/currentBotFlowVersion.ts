@@ -24,7 +24,10 @@ export interface stateData {
       tick: number;
     };
   };
-  undoRedoActions: Array<undoRedoActionType>;
+  undoRedo: {
+    actions: Array<undoRedoActionType>;
+    currentIndex: number;
+  };
   drawflow: drawflow;
   modalType: string | null;
   newPathDirection: clientPos | null;

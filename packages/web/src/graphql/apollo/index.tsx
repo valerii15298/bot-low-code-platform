@@ -8,9 +8,10 @@ export const cache = new InMemoryCache({
   possibleTypes: introspectionQueryResultData.possibleTypes,
 });
 
-export const graphqlUri = import.meta.env.PROD
-  ? import.meta.env.VITE_GRAPHQL_API_PATH
-  : "http://localhost:3000/graphql";
+// TODO use only env var, and do not depend on prod or dev here
+export const graphqlUri =
+  (import.meta.env.PROD && import.meta.env.VITE_GRAPHQL_API_PATH) ||
+  "http://localhost:3000/graphql";
 
 export const apolloClient = new ApolloClient({
   uri: graphqlUri,

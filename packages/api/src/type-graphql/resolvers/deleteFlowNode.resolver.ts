@@ -19,9 +19,9 @@ export class DeleteFlowNodeResolver {
     const {
       where: { id, nodeInfoId, nodePropsId },
     } = args;
-    // const deleteNode = prisma.flowNode.delete({
-    //   where: { id },
-    // });
+    const deleteNode = prisma.flowNode.delete({
+      where: { id },
+    });
 
     const deleteNodeProps = prisma.nodeProps.delete({
       where: { id: nodePropsId },
@@ -29,7 +29,7 @@ export class DeleteFlowNodeResolver {
     const deleteNodeInfo = prisma.nodeInfo.delete({
       where: { id: nodeInfoId },
     });
-    await prisma.$transaction([deleteNodeProps, deleteNodeInfo]);
-    return null;
+    await prisma.$transaction([deleteNode, deleteNodeProps, deleteNodeInfo]);
+    return await deleteNode;
   }
 }

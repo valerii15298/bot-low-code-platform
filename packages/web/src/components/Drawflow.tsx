@@ -9,7 +9,6 @@ import {
   insertCopiedNode,
   setStateAction,
 } from "../redux/actions";
-import { canvasMouseUpThunk, commitFlowVersionThunk } from "../redux/api";
 import { actions } from "../redux/drawflowSlice";
 import {
   useAppDispatch,
@@ -29,12 +28,13 @@ import {
   ParentDrawflow,
 } from "./StyledComponents";
 
-import gg from "../graphql/operations.graphql";
-import { removeActiveConnectionThunk } from "../redux/thunks/removeConnection";
+import { removeActiveConnectionThunk } from "../redux/thunks/removeActiveConnection";
 import { LocalStorageKey } from "../spacing";
 import { pureTemplateNode } from "../types/node.types";
 import { canvasShape } from "../types/helpers";
-import { removeActiveFlowNodeThunk } from "../redux/thunks/removeActiveFlowNodeThunk";
+import { removeActiveFlowNodeThunk } from "../redux/thunks/removeActiveFlowNode";
+import { commitFlowVersionThunk } from "../redux/thunks/commitFlowVersion";
+import { canvasMouseUpThunk } from "../redux/thunks/canvasMouseUp";
 
 // console.log({ gg });
 

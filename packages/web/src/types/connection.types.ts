@@ -1,6 +1,7 @@
 import { versions } from "./botFlow.types";
 
-export type connection = versions[number]["connections"][number] & {
+export type pureConnection = versions[number]["connections"][number];
+export type connection = pureConnection & {
   visible: number;
 };
 export type idConnType = connection["id"];

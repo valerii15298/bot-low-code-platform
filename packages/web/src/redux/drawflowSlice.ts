@@ -26,7 +26,7 @@ export const getDefaultProcessEntitiesPayload = (): ProcessEntitiesPayload => ({
 
 export const processEntities = (
   state: stateData,
-  { payload: { data, pushToUndoRedo } }: UndoableEntitiesPayload
+  { payload: { data, pushToUndoRedo }, type }: UndoableEntitiesPayload
 ) => {
   const { connections, ports, drawflow } = data;
   const undo = getDefaultProcessEntitiesPayload();
@@ -55,12 +55,15 @@ export const processEntities = (
   connections?.add?.forEach((conn) => (state.connections[conn.id] = conn));
   undo.connections.remove = connections?.add?.map(({ id }) => id) ?? [];
 
-  pushToUndoRedo &&
-    state.undoRedoActions.push({
-      type: "processEntities",
+  if (pushToUndoRedo) {
+    state.undoRedo.actions.push({
+      type,
       undo,
       redo: data,
+      live: state.live,
     });
+    state.undoRedo.currentIndex++;
+  }
 
   new Flow(state).alignAll();
 };
@@ -103,9 +106,10 @@ const slice = createSlice({
       state.config.drag = false;
       state.select = null;
     },
-    select: (state, { payload }: PayloadAction<select>) => {
+    select: (state, { payload, type }: PayloadAction<select>) => {
       state.config.drag = payload.type === "node";
       state.select = payload;
+      console.log({ type });
     },
     selectPort: (state, { payload: { id } }: PayloadAction<{ id: number }>) => {
       const port = state.ports[id];
@@ -184,47 +188,14 @@ const slice = createSlice({
       new Flow(state).alignAll();
     },
     canvasMouseUp,
-    // deleteNode: (state) => {
-    //   const { drawflow, ports, select } = state;
-    //   if (select?.type !== "node") return;
-    //   const { selectId } = select;
-    //   const flow = new Flow(state);
-    //   const selectedNode = flow.getNode(selectId);
-    //
-    //   // find and delete connections
-    //   Object.values(state.connections).forEach((conn) => {
-    //     const { fromPort, toPort } = conn;
-    //     if (
-    //       selectedNode.nodePorts.some((p) =>
-    //         [fromPort.id, toPort.id].includes(p.id)
-    //       )
-    //     ) {
-    //       delete state.connections[conn.id];
-    //     }
-    //   });
-    //
-    //   // find and delete ports
-    //   Object.values(state.ports).forEach((port) => {
-    //     if (port.nodeId === selectId) {
-    //       delete state.ports[port.id];
-    //     }
-    //   });
-    //
-    //   // 3. find in drawflow
-    //   delete drawflow[selectId];
-    //
-    //   // clear select
-    //   state.select = null;
-    // },
-
-    // deletePath: (state) => {
-    //   const { select } = state;
-    //   if (select?.type === "path") {
-    //     delete state.connections[select.selectId];
-    //     new Flow(state).setLaneNumbers();
-    //   }
-    // },
     processEntities,
+    processConnections: (state, action: UndoableEntitiesPayload) => {
+      processEntities(state, action);
+    },
+    processFlowNodes: (state, action: UndoableEntitiesPayload) => {
+      processEntities(state, action);
+    },
+
     portMouseUp: (
       state,
       { payload: { id } }: PayloadAction<{ id: number }>

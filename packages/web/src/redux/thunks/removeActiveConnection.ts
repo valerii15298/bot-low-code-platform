@@ -7,9 +7,10 @@ import {
 import { setStateAction } from "../actions";
 import { copyStateData } from "../copyStateData";
 import { getId } from "../getId";
-import { sdk, undoThunk } from "../api";
+import { sdk } from "../api";
 import { stateData } from "../../types/currentBotFlowVersion";
 import { flowType } from "../../types/reduxStoreState";
+import { undoThunk } from "./undoThunk";
 
 export const removeActiveConnectionThunk = createAsyncThunk(
   "removeActiveConnection",

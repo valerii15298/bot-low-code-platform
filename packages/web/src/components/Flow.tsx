@@ -4,7 +4,6 @@ import { useEffect } from "react";
 import "react-toggle/style.css";
 import styled from "styled-components";
 import { Chat } from "../chat/Chat";
-import { fetchBotFlow } from "../redux/api";
 import { useAppDispatch, useAppSelector } from "../redux/hooks";
 import { CodeEditor } from "./CodeEditor";
 import { Drawflow } from "./Drawflow";
@@ -16,6 +15,7 @@ import { TemplateNodeSettings } from "./NodeSettings/TemplateNodeSettings";
 import { Sidebar, ToggleSidebar } from "./Sidebar";
 import { FlowDiv, Main, MainDiv } from "./StyledComponents";
 import { mainWindow, sideWindow } from "../spacing";
+import { fetchBotFlowThunk } from "../redux/thunks/fetchBotFlow";
 
 const AppCodeEditor = () => {
   const json = useAppSelector((s) => s);
@@ -98,7 +98,7 @@ export const Flow = () => {
   const dispatch = useAppDispatch();
   useEffect(() => {
     // dispatch(fetchFlow());
-    dispatch(fetchBotFlow());
+    dispatch(fetchBotFlowThunk());
     // dispatch(fetchGroups());
     // dispatch(fetchTemplateNodes());
     // dispatch(initFlow());

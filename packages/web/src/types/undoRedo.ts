@@ -22,7 +22,8 @@ export type ProcessEntitiesPayloadPartial = RecursivePartial<
 >;
 
 export interface processEntitiesAction {
-  type: "processEntities";
+  type: string;
+  live: boolean;
   undo: ProcessEntitiesPayload;
   redo: ProcessEntitiesPayloadPartial;
 }
