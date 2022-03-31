@@ -42,7 +42,7 @@
     "lint": "eslint ."
   },
   "dependencies": {
-    "@types/lodash": "^4.14.178",
+    "@types/lodash": "^4.14.181",
     "lodash": "^4.17.21",
     "standardized-audio-context": "^25.3.21"
   },
@@ -60,7 +60,7 @@
     "ts-jest": "^26.5.6",
     "ts-loader": "^8.3.0",
     "typescript": "^3.9.10",
-    "webpack": "^5.68.0",
+    "webpack": "^5.70.0",
     "webpack-cli": "^4.9.2"
   },
   "jest": {
