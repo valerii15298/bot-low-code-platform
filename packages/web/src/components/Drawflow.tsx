@@ -2,7 +2,7 @@ import { EventEmitter } from "eventemitter3";
 import gql from "graphql-tag";
 import { useEffect, useRef } from "react";
 import { TemplateNodeFragmentDoc } from "../generated/graphql-request";
-import { cache } from "../graphql/apollo";
+import { cache } from "../graphql";
 import {
   addNewNode,
   canvasShapeUpdated,

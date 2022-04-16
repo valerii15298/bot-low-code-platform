@@ -13,7 +13,7 @@ export const WaveJSAudioVisualizer = ({
   useEffect(() => {
     if (!canvasRef.current) return;
     const generateId = function () {
-      return "_" + Math.random().toString(36).substr(2, 9);
+      return "_" + Math.random().toString(36).substring(2, 9);
     };
     const id = generateId();
     canvasRef.current.id = `audioCanvas${id}`;

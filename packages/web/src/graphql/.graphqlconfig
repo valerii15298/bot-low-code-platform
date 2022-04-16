@@ -1,12 +1,10 @@
 {
   "name": "App schema",
   "schemaPath": "schema.graphql",
-  "excludes": [
-    "dgraph/generatedSchema.graphql"
-  ],
+  "excludes": [],
   "extensions": {
     "endpoints": {
-      "Dgraph graphql api": {
+      "Graphql api": {
         "url": "https://localhost:3000/graphql",
         "headers": {
           "user-agent": "JS GraphQL"

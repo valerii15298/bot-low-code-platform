@@ -1,7 +1,7 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { GraphQLClient } from "graphql-request";
 import { getSdk } from "../generated/graphql-request";
-import { graphqlUri } from "../graphql/apollo";
+import { graphqlUri } from "../graphql";
 
 const urlParams = new URLSearchParams(window.location.search);
 export const botFlowId = Number(urlParams.get("botFlowId"));

@@ -1,8 +1,7 @@
 import { ApolloClient, ApolloProvider, InMemoryCache } from "@apollo/client";
 import { FC } from "react";
-import introspectionQueryResultData from "../fragmentTypes";
-import { typeDefs } from "../local-schema";
-import React from "react";
+import introspectionQueryResultData from "./fragmentTypes";
+import { typeDefs } from "./local-schema";
 
 export const cache = new InMemoryCache({
   possibleTypes: introspectionQueryResultData.possibleTypes,

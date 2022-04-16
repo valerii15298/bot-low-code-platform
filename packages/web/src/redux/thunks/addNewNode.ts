@@ -6,7 +6,7 @@ import {
   getDefaultProcessEntitiesPayload,
   selectActiveDrawflow,
 } from "../drawflowSlice";
-import { cache } from "../../graphql/apollo";
+import { cache } from "../../graphql";
 import gql from "graphql-tag";
 import { TemplateNodeFragmentDoc } from "../../generated/graphql-request";
 import { node, pureTemplateNode } from "../../types/node.types";
